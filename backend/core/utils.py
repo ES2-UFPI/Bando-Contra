@@ -12,6 +12,6 @@ class ModelField:
         return models.DateField(label, default = None)
     
     def createPhone ():
-        phone_regex = RegexValidator(regex=r'\( \d{2} \) \d{4,5} - \d{4}', message="Informe um telefone válido. Exemplos: (99)99999-9999; (99)9999-9999")
+        phone_regex = RegexValidator(regex=r'\(\d{2}\)\d{4,5}-\d{4}', message="Informe um telefone válido. Exemplos: (99)99999-9999; (99)9999-9999")
         return models.CharField("Phone Number", max_length = 18, default = None, validators = [phone_regex])
 
