@@ -7,7 +7,7 @@ class ClientUser (User):
     cpf = fieldCreator.createCpf()
     address = fieldCreator.createAddress()
     phone = fieldCreator.createPhone()
-    born_date = fieldCreator.createDate("Born Date")
+    bornDate = fieldCreator.createDate("Born Date")
 
     def __str__ (self):
         return self.cpf
