@@ -36,5 +36,8 @@ class PartnerUser (User):
     observation = fieldCreator.createObservation()
     phone = fieldCreator.createPhone()
 
+    def getTemplatesLocation(self):
+        return 'core/user/partner/'
+    
     class Meta:
         verbose_name = "Partner"
