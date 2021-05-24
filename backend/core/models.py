@@ -14,3 +14,18 @@ class ClientUser (User):
 
     class Meta:
         verbose_name = "Client"
+
+
+class PartnerUser (User):
+    fieldCreator = ModelField
+    
+    nationality = fieldCreator.createNationality()
+    # document = fieldCreator.createDocument()
+    validation = fieldCreator.createValidation()
+    assessmentSum = fieldCreator.createAssessmentSum()
+    assessmentCount = fieldCreator.createAssessmentCount()
+    observation = fieldCreator.createObservation()
+    phone = fieldCreator.createPhone()
+
+    class Meta:
+        verbose_name = "Partner"
