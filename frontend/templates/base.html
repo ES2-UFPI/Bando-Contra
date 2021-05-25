@@ -19,7 +19,7 @@
     {% block styles %}
     {% endblock %}
 
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
 
 </head>
 
@@ -27,14 +27,49 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="#">BANDO-CONTRA</a>
-        </div>
+      <div class="container">
+        <a class="navbar-brand" href="#">Bando-Contra</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          </ul>
+          <hr class="my-4">
+          <div class="nav-item dropdown">
+            <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ user.username }}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li>{% block userType %}
+                <a class="dropdown-item" href="#">
+                    <div style="clear: left;">
+                        <div style="float: left;" class="me-1">
+                            <span class="material-icons-outlined">
+                                account_circle
+                            </span>
+                        </div>
+                        <p class="mb-0">Profile</p>
+                    </div>
+                </a>
+                {% endblock %}</li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item" href="#">
+                    <div style="clear: left;">
+                        <div style="float: left;" class="me-1">
+                            <span class="material-icons-outlined">
+                            logout
+                            </span>
+                        </div>
+                        <p class="mb-0">Logout</p>
+                    </div>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
     </nav>
 
     <div class="container mt-5">
@@ -52,7 +87,7 @@
           </ul>
         </footer>
     
-      </div>
+    </div>
 
     <!-- Scripts block -->
     {% block scripts %}
