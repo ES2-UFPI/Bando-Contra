@@ -1,1 +1,14 @@
 {% extends 'core/form.html' %}
+
+{% block userType %}
+<a class="dropdown-item" href="{% url 'detail_client' %}">
+    <div style="clear: left;">
+        <div style="float: left;" class="me-1">
+            <span class="material-icons-outlined">
+                account_circle
+            </span>
+        </div>
+        <p class="mb-0">Profile</p>
+    </div>
+</a>
+{% endblock %}

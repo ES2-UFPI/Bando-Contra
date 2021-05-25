@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block userType %}
+<a class="dropdown-item" href="{% url 'detail_client' %}">
+    <div style="clear: left;">
+        <div style="float: left;" class="me-1">
+            <span class="material-icons-outlined">
+                account_circle
+            </span>
+        </div>
+        <p class="mb-0">Profile</p>
+    </div>
+</a>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="card">
+        <div class="card-header">
+          @{{ user.username }}
+        </div>
+        <div class="card-body">
+            <div style="clear: left;">
+                <div style="float: left;" class="me-4">
+                    <span class="material-icons-outlined">
+                        account_circle
+                    </span>
+                </div>
+                <h5 class="card-title mb-4">{{ user.first_name }} {{ user.last_name }}</h5>
+            </div>
+            <div class="row">
+                <div class="col" style="clear: left;">
+                    <div style="float: left;" class="me-1">
+                        <span class="material-icons-outlined" style=" font-size: 100%;">
+                            star
+                        </span>
+                    </div>
+                    <p>{{ user.bornDate }}</p>
+                </div>
+                <div class="col" style="clear: left;">
+                    <div style="float: left;" class="me-1">
+                        <span style=" font-size: 80%; vertical-align: text-top;">
+                            CPF
+                        </span>
+                    </div>
+                    <p>{{ user.cpf }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" style="clear: left;">
+                    <div style="float: left;" class="me-1">
+                        <span class="material-icons-outlined" style=" font-size: 100%;">
+                            phone
+                        </span>
+                    </div>
+                    <p>{{ user.phone }}</p>
+                </div>
+                <div class="col" style="clear: left;">
+                    <div style="float: left;" class="me-1">
+                        <span class="material-icons-outlined" style=" font-size: 100%;">
+                            home
+                        </span>
+                    </div>
+                    <p>{{ user.address }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div style="clear: left;">
+                    <div style="float: left;" class="me-1">
+                        <span class="material-icons-outlined" style=" font-size: 100%;">
+                            email
+                        </span>
+                    </div>
+                    <p>{{ user.email }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <a href="#" class="btn btn-outline-primary mt-2">Edit Profile</a>
+            </div>
+        </div>
+      </div>
+</main>
+{% endblock %}
