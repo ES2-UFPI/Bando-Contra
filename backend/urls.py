@@ -19,5 +19,7 @@ from .core import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('user/client/detail', views.detailClient, name="detail_client")
+    path('user/client/detail', views.detailClient, name="detail_client"),
+    path('user/partner/detail', views.detailPartner, name="detail_partner"),
+    path('', views.temporaryLogin, name="temporary_login"),
 ]
