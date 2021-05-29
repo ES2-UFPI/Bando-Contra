@@ -35,8 +35,12 @@ class UserCreator(ABC):
         else:
             form = self.getForm()
         data = {'title':title, "form":form}
-        result = user.getTemplatesLocation() + "register.html"
+        result = self.getTemplatesLocation() + "register.html"
         return ShortcutsFacade.callRender(request, result, data) 
+    
+    @abstractmethod
+    def getTemplatesLocation(self):
+        pass
     
     @abstractmethod
     def getForm(self):
@@ -47,7 +51,10 @@ class ClientCreator(UserCreator):
     def factoryMethod(self, request ):
         form = ClientUserForm(request.POST)
         if form.is_valid():
-            return form.save(commit = false)
+            return form.save(commit = False)
 
     def getForm(self):
         return ClientUserForm()
+    
+    def getTemplatesLocation(self):
+        return "core/user/client/"
