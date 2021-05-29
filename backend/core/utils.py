@@ -1,9 +1,11 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
-
+from abc import ABC, abstractmethod
 from .storage import OverwriteStorage
+from .forms import ClientUserForm
+
 STORAGE=OverwriteStorage(location="_private/users/documents")
 
 class ModelField:
@@ -43,6 +45,10 @@ class ShortcutsFacade:
     def callRender(request, template, data={}):
         return render(request, template, data)
 
+    @staticmethod
+    def callRedirect(name):
+        return redirect(name)
+
 class UserFacade:
     @staticmethod
     def addMethodToUser(methodName,method):
@@ -68,3 +74,38 @@ class UserContext:
         result = self._user.getTemplatesLocation() + "detail.html"
         data = {'user': self._user}
         return ShortcutsFacade.callRender(request, result, data)
+
+class UserCreator(ABC):
+    @abstractmethod
+    def factoryMethod(self, request):
+        pass 
+
+    def addUser(self, request, title):
+        
+        if request.method == "POST":
+            user = self.factoryMethod(request)
+            if user != None:
+                user.save()
+                return ShortcutsFacade.callRedirect("detail_client")
+            form = ClientUserForm(request.POST)
+        else:
+            form = creator.getForm()
+        data = {'title':title, "form":form}
+        result = user.getTemplatesLocation() + "register.html"
+        return ShortcutsFacade.callRender(request, result, data) 
+    
+    @abstractmethod
+    def getForm(self, request):
+        pass
+
+class ClientCreator(UserCreator):
+    
+    def factoryMethod(self, request ):
+        form = ClientUserForm(request.POST)
+        if form.is_valid():
+            return form.save(commit = false)
+
+    def getForm(self):
+        return ClientUserForm()
+    
+    
