@@ -41,16 +41,32 @@
                     <p>{{ user.nationality }}</p>
                 </div>
                 <div class="col" style="clear: left;">
+                    
+                    {% if user.validation  %}
+
                     <div style="float: left;" class="me-1">
-                        <span style=" font-size: 100%; vertical-align: text-top;">
-                            Documentos Analisados:
+                        <span class="material-icons-outlined" style=" font-size: 100%;">
+                            verified
                         </span>
                     </div>
 
-                    {% if user.validation  %}
-                    <p style="font-size: 100%; vertical-align: text-top;">Sim</p>
+                    <div style="float: left;" class="me-1">
+                        <span style=" font-size: 100%; vertical-align: text-top;">
+                            Documentos Analisados
+                        </span>
+                    </div>
                     {% else %}
-                    <p style="font-size: 100%; vertical-align: text-top;">Não</p>
+                    <div style="float: left;" class="me-1">
+                        <span class="material-icons-outlined" style=" font-size: 100%;">
+                            highlight_off
+                        </span>
+                    </div>
+
+                    <div style="float: left;" class="me-1">
+                        <span style=" font-size: 100%; vertical-align: text-top;">
+                            Documentos não analisados
+                        </span>
+                    </div>
                     {% endif %}
                 </div>
             </div>
@@ -69,8 +85,7 @@
                             favorite
                         </span>
                     </div>
-                    <p>{{ user.assessmentSum }}/{{ user.assessmentCount }}</p>
-                    <!-- Implementar essa divisão no backend -->
+                    <p> {{ assessment }} </p>
                 </div>
             </div>
             <div class="row">
@@ -82,7 +97,19 @@
                     </div>
                     <p>{{ user.email }}</p>
                 </div>
+
+                
+                <div class="col" style="clear: left;">
+                    <div style="float: left;" class="me-1">
+                        <span class="material-icons-outlined" style=" font-size: 100%;">
+                            info
+                        </span>
+                    </div>
+                    <p>{{ user.observation }}</p>
+                </div>
             </div>
+
+
             <div class="row">
                 <a href="#" class="btn btn-outline-primary mt-2">Edit Profile</a>
             </div>

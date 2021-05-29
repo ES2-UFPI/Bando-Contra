@@ -64,7 +64,11 @@ class UserContext:
     def user(self, user):
         self._user = user
     
-    def detailView(self, request):
+    def detailView(self, request, *args):
         result = self._user.getTemplatesLocation() + "detail.html"
-        data = {'user': self._user}
+        print()
+        data = {
+            'user': self._user,
+            'assessment' : args[0],
+        }
         return ShortcutsFacade.callRender(request, result, data)

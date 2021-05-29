@@ -11,7 +11,10 @@ def detailClient(request):
 def detailPartner(request):
     user = UserFacade.getUser(PartnerUser, request.user.username)
     context = UserContext(user)
-    return context.detailView(request)
+
+    assessment = user.assessmentSum/user.assessmentCount if user.assessmentCount > 0  else 0
+
+    return context.detailView(request, assessment)
 
 def temporaryLogin(request):
     user = User.objects.get(username='user1')
