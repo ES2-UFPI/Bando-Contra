@@ -15,4 +15,4 @@ def detailPartner(request):
 
 def addClient(request):
     creator = ClientCreator()
-    return creator.addUser(request, "sign in")
+    return creator.addUser(request, "sign up")

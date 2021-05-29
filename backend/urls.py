@@ -20,5 +20,5 @@ from .core import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/client/detail', views.detailClient, name="detail_client"),
-    path('user/client/sign_in', views.addClient, name="addClient")
+    path('user/client/sign_up', views.addClient, name="addClient")
 ]
