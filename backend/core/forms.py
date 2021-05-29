@@ -8,4 +8,4 @@ class ClientUserForm(ModelForm):
     
     class Meta:
         model = ClientUser
-        fields = ['username', 'first_name', 'second_name', 'email', 'password', 'cpf', 'address', 'phone', 'bornDate']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'cpf', 'address', 'phone', 'bornDate']
