@@ -3,6 +3,7 @@ from django.core.validators import RegexValidator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
 from .storage import OverwriteStorage
+from django import forms
 
 STORAGE=OverwriteStorage(location="_private/users/documents")
 
@@ -55,3 +56,14 @@ class UserFacade:
     @staticmethod
     def getUser(userModel, username):
         return get_object_or_404(userModel, username=username)
+
+class FormFacade:
+    @staticmethod
+    def dateInput():
+        return forms.DateInput(format = '%Y-%m-%d', attrs = {'type': 'date'})
+    
+    @staticmethod
+    def phoneInput():
+        return forms.TextInput(attrs = {'type': 'tel'})
+    
+    
