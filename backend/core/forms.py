@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import ClientUser
+from .models import ClientUser, PartnerUser
 from .facade import FormFacade
 
 class ClientUserForm(ModelForm):
@@ -19,4 +19,19 @@ class ClientUserForm(ModelForm):
 
         input_formats = {
             'bornDate': ('%Y-%m-%d',)
+        }
+
+
+class PartnerUserForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PartnerUserForm, self).__init__(*args, **kwargs)
+        self.fields['email'].required = True
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+    
+    class Meta:
+        model = PartnerUser
+        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'nationality', 'phone']
+        widgets = {
+            'phone': FormFacade.phoneInput(),
         }
