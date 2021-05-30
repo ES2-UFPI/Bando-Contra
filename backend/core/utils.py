@@ -23,9 +23,12 @@ class UserContext:
     def userForm(self, userForm):
         self._userForm = userForm
     
-    def detailView(self, request):
+    def detailView(self, request, assessment=0):
         result = self._user.getTemplatesLocation() + "detail.html"
-        data = {'user': self._user}
+        data = {
+            'user': self._user,
+            'assessment' : assessment,
+        }
         return ShortcutsFacade.callRender(request, result, data)
 
     def editView(self, request):
