@@ -1,7 +1,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from .models import ClientUser, PartnerUser
-from .utils import UserContext, ShortcutsFacade, ClientCreator
+from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator
 from .forms import ClientUserForm, PartnerUserForm
 from .facade import UserFacade
 
@@ -30,6 +30,10 @@ def editClient(request):
     user = UserFacade.getUser(ClientUser, request.user.username)
     context = UserContext(user, ClientUserForm)
     return context.editView(request)
+
+def addPartner(request):
+    creator = PartnerCreator()
+    return creator.addUser(request, "sign up")
 
 def editPartner(request):
     user = UserFacade.getUser(PartnerUser, request.user.username)
