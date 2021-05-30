@@ -3,8 +3,9 @@ from .forms import ClientUserForm
 from .facade import ShortcutsFacade
 
 class UserContext:
-    def __init__(self, user):
+    def __init__(self, user, userForm=None):
         self._user = user
+        self._userForm = userForm
 
     @property
     def user(self):
@@ -13,10 +14,32 @@ class UserContext:
     @user.setter
     def user(self, user):
         self._user = user
+
+    @property
+    def userForm(self):
+        return self._userForm
+
+    @user.setter
+    def userForm(self, userForm):
+        self._userForm = userForm
     
     def detailView(self, request):
         result = self._user.getTemplatesLocation() + "detail.html"
         data = {'user': self._user}
+        return ShortcutsFacade.callRender(request, result, data)
+
+    def editView(self, request):
+        if request.method == 'POST':
+            form = self._userForm(request.POST, instance=self._user)
+            if form.is_valid():
+                form.save()
+                return ShortcutsFacade.callRedirect("detail_client")
+        else:
+            form = self._userForm(instance=self._user)
+
+        result = self._user.getTemplatesLocation() + "register.html"
+        data = {'form': form, 'title': 'edit profile'}
+
         return ShortcutsFacade.callRender(request, result, data)
 
 class UserCreator(ABC):
