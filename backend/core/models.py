@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from .utils import ModelField
-from .utils import UserFacade
+from .facade import ModelField
+from .facade import UserFacade
 from abc import abstractmethod
 
 @abstractmethod

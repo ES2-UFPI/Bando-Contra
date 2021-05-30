@@ -1,60 +1,11 @@
-from django.db import models
-from django.core.validators import RegexValidator
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.models import User
-
-from .storage import OverwriteStorage
-STORAGE=OverwriteStorage(location="_private/users/documents")
-
-class ModelField:
-    def createAddress ():
-        return models.CharField("Address", max_length = 100, default = None)
-    
-    def createCpf ():
-        return models.CharField("CPF", max_length = 11, default = None)
-    
-    def createDate (label):
-        return models.DateField(label, default = None)
-    
-    def createPhone ():
-        phone_regex = RegexValidator(regex=r'\(\d{2}\)\d{4,5}-\d{4}', message="Informe um telefone válido. Exemplos: (99)99999-9999; (99)9999-9999")
-        return models.CharField("Phone Number", max_length = 18, default = None, validators = [phone_regex])
-
-    def createNationality ():
-        return models.CharField("Nationality", max_length = 50, default = None)
-
-    def createValidation ():
-        return models.BooleanField("Validation", default = False)
-
-    def createAssessmentSum ():
-        return models.IntegerField ("Assessment Sum", default = 0)
-
-    def createAssessmentCount ():
-        return models.IntegerField ("Assessment Count", default = 0)
-
-    def createObservation ():
-        return models.CharField("Observation", max_length = 5000, default = None)
-
-    def createDocument ():
-        return models.FileField("Document", storage=STORAGE)
-
-class ShortcutsFacade:
-    @staticmethod
-    def callRender(request, template, data={}):
-        return render(request, template, data)
-
-class UserFacade:
-    @staticmethod
-    def addMethodToUser(methodName,method):
-        User.add_to_class(methodName, method)
-
-    @staticmethod
-    def getUser(userModel, username):
-        return get_object_or_404(userModel, username=username)
+from abc import ABC, abstractmethod
+from .forms import ClientUserForm
+from .facade import ShortcutsFacade
 
 class UserContext:
-    def __init__(self, user):
+    def __init__(self, user, userForm=None):
         self._user = user
+        self._userForm = userForm
 
     @property
     def user(self):
@@ -63,6 +14,14 @@ class UserContext:
     @user.setter
     def user(self, user):
         self._user = user
+
+    @property
+    def userForm(self):
+        return self._userForm
+
+    @user.setter
+    def userForm(self, userForm):
+        self._userForm = userForm
     
     def detailView(self, request, assessment=0):
         result = self._user.getTemplatesLocation() + "detail.html"
@@ -71,3 +30,57 @@ class UserContext:
             'assessment' : assessment,
         }
         return ShortcutsFacade.callRender(request, result, data)
+
+    def editView(self, request):
+        if request.method == 'POST':
+            form = self._userForm(request.POST, instance=self._user)
+            if form.is_valid():
+                form.save()
+                return ShortcutsFacade.callRedirect("detail_client")
+        else:
+            form = self._userForm(instance=self._user)
+
+        result = self._user.getTemplatesLocation() + "register.html"
+        data = {'form': form, 'title': 'edit profile'}
+
+        return ShortcutsFacade.callRender(request, result, data)
+
+class UserCreator(ABC):
+    @abstractmethod
+    def factoryMethod(self, request):
+        pass 
+
+    def addUser(self, request, title):
+        
+        if request.method == "POST":
+            user = self.factoryMethod(request)
+            if user != None:
+                user.save()
+                return ShortcutsFacade.callRedirect("detail_client")
+            form = ClientUserForm(request.POST)
+        else:
+            form = self.getForm()
+        data = {'title':title, "form":form}
+        result = self.getTemplatesLocation() + "register.html"
+        return ShortcutsFacade.callRender(request, result, data) 
+    
+    @abstractmethod
+    def getTemplatesLocation(self):
+        pass
+    
+    @abstractmethod
+    def getForm(self):
+        pass
+
+class ClientCreator(UserCreator):
+    
+    def factoryMethod(self, request ):
+        form = ClientUserForm(request.POST)
+        if form.is_valid():
+            return form.save(commit = False)
+
+    def getForm(self):
+        return ClientUserForm()
+    
+    def getTemplatesLocation(self):
+        return "core/user/client/"

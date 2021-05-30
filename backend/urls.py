@@ -22,4 +22,6 @@ urlpatterns = [
     path('user/client/detail', views.detailClient, name="detail_client"),
     path('user/partner/detail', views.detailPartner, name="detail_partner"),
     path('', views.temporaryLogin, name="temporary_login"),
+    path('user/client/sign_up', views.addClient, name="addClient"),
+    path('user/client/edit_profile', views.editClient, name="aditClient")
 ]

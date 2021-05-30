@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'backend.core.apps.DefaultApp',
 ]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -112,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'pt-br'
+LANGUAGE_CODE = 'en'
 TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = True
 USE_L10N = True

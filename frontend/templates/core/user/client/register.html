@@ -1,4 +1,5 @@
 {% extends 'core/form.html' %}
+{% load static %}
 
 {% block userType %}
 <a class="dropdown-item" href="{% url 'detail_client' %}">
@@ -11,4 +12,8 @@
         <p class="mb-0">Profile</p>
     </div>
 </a>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/phone-field-format.js' %}"></script>
 {% endblock %}
