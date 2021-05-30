@@ -1,4 +1,5 @@
 from .models import ClientUser, PartnerUser
+from .forms import ClientUserForm
 from .utils import UserContext
 from .utils import ClientCreator
 from .facade import UserFacade
@@ -16,3 +17,8 @@ def detailPartner(request):
 def addClient(request):
     creator = ClientCreator()
     return creator.addUser(request, "sign up")
+
+def editClient(request):
+    user = UserFacade.getUser(ClientUser, request.user.username)
+    context = UserContext(user, ClientUserForm)
+    return context.editView(request)
