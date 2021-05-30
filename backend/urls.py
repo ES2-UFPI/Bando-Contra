@@ -23,5 +23,7 @@ urlpatterns = [
     path('user/partner/detail', views.detailPartner, name="detail_partner"),
     path('', views.temporaryLogin, name="temporary_login"),
     path('user/client/sign_up', views.addClient, name="addClient"),
-    path('user/client/edit_profile', views.editClient, name="aditClient")
+    path('user/client/edit_profile', views.editClient, name="aditClient"),
+    path('user/partner/sign_up', views.addPartner, name="addPartner"),
+    path('user/partner/edit_profile', views.editPartner, name="aditPartner"),
 ]
