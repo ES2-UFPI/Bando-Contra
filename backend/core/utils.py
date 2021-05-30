@@ -84,3 +84,16 @@ class ClientCreator(UserCreator):
     
     def getTemplatesLocation(self):
         return "core/user/client/"
+
+class PartnerCreator(UserCreator):
+    
+    def factoryMethod(self, request ):
+        form = PartnerUserForm(request.POST)
+        if form.is_valid():
+            return form.save(commit = False)
+
+    def getForm(self):
+        return PartnerUserForm()
+    
+    def getTemplatesLocation(self):
+        return "core/user/partner/"
