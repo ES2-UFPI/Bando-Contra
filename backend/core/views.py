@@ -1,7 +1,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from .models import ClientUser, PartnerUser
-from .utils import UserContext, UserFacade, ShortcutsFacade, ClientCreator
+from .utils import UserContext, ShortcutsFacade, ClientCreator
 from .forms import ClientUserForm
 from .facade import UserFacade
 

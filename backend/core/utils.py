@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .forms import ClientUserForm
+from .forms import ClientUserForm, PartnerUserForm
 from .facade import ShortcutsFacade
 
 class UserContext:
