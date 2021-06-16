@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db import models
 from .facade import ModelField
 from .facade import UserFacade
 from abc import abstractmethod
@@ -9,11 +10,10 @@ def getTemplatesLocation(self):
 UserFacade.addMethodToUser('getTemplatesLocation', getTemplatesLocation)
 
 class ClientUser (User):
-    fieldCreator = ModelField
-    cpf = fieldCreator.createCpf()
-    address = fieldCreator.createAddress()
-    phone = fieldCreator.createPhone()
-    bornDate = fieldCreator.createDate("Born Date")
+    cpf = ModelField.createCharField("CPF", 11)
+    address = ModelField.createCharField("Address", 100)
+    phone = ModelField.createPhoneField()
+    bornDate = ModelField.createDateField("Born Date")
 
     def getTemplatesLocation(self):
         return "core/user/client/"
@@ -26,18 +26,25 @@ class ClientUser (User):
 
 
 class PartnerUser (User):
-    fieldCreator = ModelField
-    
-    nationality = fieldCreator.createNationality()
-    # document = fieldCreator.createDocument()
-    validation = fieldCreator.createValidation()
-    assessmentSum = fieldCreator.createAssessmentSum()
-    assessmentCount = fieldCreator.createAssessmentCount()
-    observation = fieldCreator.createObservation()
-    phone = fieldCreator.createPhone()
+    nationality = ModelField.createCharField("Nationality", 50)
+    # document = ModelField.createFileField()
+    validation = ModelField.createBooleanField("Validation")
+    assessmentSum = ModelField.createIntergerField("Assessment Sum")
+    assessmentCount = ModelField.createIntergerField("Assessment Count")
+    observation = ModelField.createCharField("Observation", 5000)
+    phone = ModelField.createPhoneField()
 
     def getTemplatesLocation(self):
         return 'core/user/partner/'
     
     class Meta:
         verbose_name = "Partner"
+
+class Event(models.Model):
+    address = ModelField.createCharField("Address", 100)
+    arrival =  ModelField.createDateField("Arrival Date")
+    departure =  ModelField.createDateField("Departure Date")
+    partner = ModelField.createForeignKey(PartnerUser)
+
+    class Meta:
+        verbose_name = "Event"
