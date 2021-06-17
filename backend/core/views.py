@@ -1,9 +1,9 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from .models import ClientUser, PartnerUser
+from .models import ClientUser, PartnerUser, Event
 from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator
 from .forms import ClientUserForm, PartnerUserForm
-from .facade import UserFacade
+from .facade import UserFacade, ShortcutsFacade
 
 
 def detailClient(request):
@@ -18,7 +18,7 @@ def detailPartner(request):
     return context.detailView(request, assessment)
 
 def temporaryLogin(request):
-    user = User.objects.get(username='user1')
+    user = User.objects.get(username='partner1')
     login(request, user)
     return ShortcutsFacade.callRender(request, "core/user/client/detail.html")
 
@@ -39,3 +39,8 @@ def editPartner(request):
     user = UserFacade.getUser(PartnerUser, request.user.username)
     context = UserContext(user, PartnerUserForm)
     return context.editView(request)
+
+def detailSchedule(request):
+    user = UserFacade.getUser(PartnerUser, request.user.username)
+    schedule = Event.objects.filter(partner = user)
+    return ShortcutsFacade.callRender(request, "core/user/partner/schedule.html", {"schedule": schedule}) 
