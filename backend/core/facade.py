@@ -37,6 +37,10 @@ class ModelField:
     @staticmethod
     def createForeignKey(model):
         return models.ForeignKey(model, on_delete=models.CASCADE, default=None)
+    
+    @staticmethod
+    def createFloatField(label):
+        return models.FloatField(label, default = 0)
 
 class ShortcutsFacade:
     @staticmethod
