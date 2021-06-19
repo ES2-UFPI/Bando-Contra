@@ -45,6 +45,7 @@ class Event(models.Model):
     arrival =  ModelField.createDateField("Arrival Date")
     departure =  ModelField.createDateField("Departure Date")
     partner = ModelField.createForeignKey(PartnerUser)
-
+    
     class Meta:
         verbose_name = "Event"
+        ordering = ['departure']
