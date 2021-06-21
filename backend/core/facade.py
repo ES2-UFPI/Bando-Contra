@@ -5,6 +5,16 @@ from django.contrib.auth.models import User
 from .storage import OverwriteStorage
 from django import forms
 
+STATUS_MSG = (
+    ("Order placed" , "Order placed"),
+    ("order on the way" , "order on the way"),
+    ("Order Delivered", "Order Delivered"),
+    ("Request under Analysis", "Request under Analysis"),
+    ("Taxed order", "Taxed order"),
+    ("address not found", "address not found"),
+    ("Problems in sending", "Problems in sending")
+)
+
 STORAGE=OverwriteStorage(location="_private/users/documents")
 
 class ModelField:
@@ -23,8 +33,12 @@ class ModelField:
         return models.FileField("Document", storage=STORAGE)
 
     @staticmethod
-    def createCharField(label, max_length):
-        return models.CharField(label, max_length = max_length, default = None)
+    def createCharField(label, max_length, choice=opc):
+
+        if opc.__len__() == 0:
+            return models.CharField(label, max_length = max_length, default = None)
+        else:
+            return models.CharField(label, max_length = max_length, choices=opc)
     
     @staticmethod
     def createIntergerField(label):
@@ -37,6 +51,10 @@ class ModelField:
     @staticmethod
     def createForeignKey(model):
         return models.ForeignKey(model, on_delete=models.CASCADE, default=None)
+    
+    @staticmethod
+    def createFloatField(label):
+        return models.FloatField(label, default = 0)
 
 class ShortcutsFacade:
     @staticmethod
