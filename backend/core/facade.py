@@ -5,6 +5,15 @@ from django.contrib.auth.models import User
 from .storage import OverwriteStorage
 from django import forms
 
+STATUS_MSG = (
+    ("Pedido Realizado" , "Pedido Realizado"),
+    ("Pedido a caminho" , "Pedido a caminho"),
+    ("Pedido Entregue", "Pedido Entregue"),
+    ("Pedido em Análise", "Pedido em Análise"),
+    ("Pedido Taxado", "Pedido Taxado"),
+    ("Endereçoa não encontrado", "Endereçoa não encontrado")
+)
+
 STORAGE=OverwriteStorage(location="_private/users/documents")
 
 class ModelField:
@@ -23,8 +32,12 @@ class ModelField:
         return models.FileField("Document", storage=STORAGE)
 
     @staticmethod
-    def createCharField(label, max_length):
-        return models.CharField(label, max_length = max_length, default = None)
+    def createCharField(label, max_length, choice=opc):
+
+        if opc.__len__() == 0:
+            return models.CharField(label, max_length = max_length, default = None)
+        else:
+            return models.CharField(label, max_length = max_length, choices=opc)
     
     @staticmethod
     def createIntergerField(label):

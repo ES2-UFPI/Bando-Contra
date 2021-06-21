@@ -50,8 +50,7 @@ class Event(models.Model):
         verbose_name = "Event"
         ordering = ['departure']
 
-class Services(models.Model):
-    code = ModelField.createIntergerField("Code")
+class Service(models.Model):
     itemDescription = ModelField.createCharField("Item Description", 300)
     quantity =  ModelField.createIntergerField("Quantity")
     productStatus = ModelField.createCharField("Product Status", 100)
@@ -65,3 +64,4 @@ class Services(models.Model):
     deliveryDate = ModelField.createDateField("Delivery Date")
     taxation = ModelField.createBooleanField("Taxation")
     clientUser = ModelField.createForeignKey(ClientUser)
+    event = ModelField.createForeignKey(Event)

@@ -44,3 +44,4 @@ def detailSchedule(request):
     user = UserFacade.getUser(PartnerUser, request.user.username)
     schedule = Event.objects.filter(partner = user)
     return ShortcutsFacade.callRender(request, "core/user/partner/schedule.html", {"schedule": schedule})
+
