@@ -54,6 +54,7 @@ class Service(models.Model):
     itemDescription = ModelField.createCharField("Item Description", 300)
     quantity =  ModelField.createIntergerField("Quantity")
     productStatus = ModelField.createCharField("Product Status", 100)
+    problemDescription = ModelField.createCharField("problem description", 200)
     itemValue = ModelField.createFloatField("Item Value")
     impost = ModelField.createFloatField("Impost")
     dynamicRate = ModelField.createFloatField("Dynamic Rate")

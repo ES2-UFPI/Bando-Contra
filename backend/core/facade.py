@@ -6,12 +6,13 @@ from .storage import OverwriteStorage
 from django import forms
 
 STATUS_MSG = (
-    ("Pedido Realizado" , "Pedido Realizado"),
-    ("Pedido a caminho" , "Pedido a caminho"),
-    ("Pedido Entregue", "Pedido Entregue"),
-    ("Pedido em Análise", "Pedido em Análise"),
-    ("Pedido Taxado", "Pedido Taxado"),
-    ("Endereçoa não encontrado", "Endereçoa não encontrado")
+    ("Order placed" , "Order placed"),
+    ("order on the way" , "order on the way"),
+    ("Pedido Entregue", "Order Delivered"),
+    ("Request under Analysis", "Request under Analysis"),
+    ("Pedido Taxado", "Taxed order"),
+    ("Endereço não encontrado", "address not found"),
+    ("Problems in sending", "Problems in sending")
 )
 
 STORAGE=OverwriteStorage(location="_private/users/documents")
