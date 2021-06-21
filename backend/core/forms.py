@@ -39,4 +39,4 @@ class PartnerUserForm(ModelForm):
 class EventForm(ModelForm):
     class Meta:
         model = Event
-        fields = ['address', 'arrival', 'departure', 'partner']
+        fields = '__all__'
