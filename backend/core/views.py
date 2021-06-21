@@ -2,7 +2,7 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from .models import ClientUser, PartnerUser, Event
 from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator
-from .forms import ClientUserForm, PartnerUserForm
+from .forms import ClientUserForm, PartnerUserForm, EventForm
 from .facade import UserFacade, ShortcutsFacade
 
 
@@ -43,5 +43,18 @@ def editPartner(request):
 def detailSchedule(request):
     user = UserFacade.getUser(PartnerUser, request.user.username)
     schedule = Event.objects.filter(partner = user)
-    return ShortcutsFacade.callRender(request, "core/user/partner/schedule.html", {"schedule": schedule})
+    return ShortcutsFacade.callRender(request, "core/user/partner/schedule.html", {"schedule": schedule}) 
 
+def addEvent(request):
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit = False)
+            user = UserFacade.getUser(PartnerUser, request.user.username)
+            event.partner = user
+            event.save
+            return ShortcutsFacade.callRedirect("detailSchedule")
+    else:
+        form = EventForm()
+    data = {'title': 'Add Schedule Event', 'form': form}
+    return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)     
