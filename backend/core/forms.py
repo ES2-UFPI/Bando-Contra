@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import ClientUser, PartnerUser
+from .models import ClientUser, PartnerUser, Event
 from .facade import FormFacade
 
 class ClientUserForm(ModelForm):
@@ -35,3 +35,8 @@ class PartnerUserForm(ModelForm):
         widgets = {
             'phone': FormFacade.phoneInput(),
         }
+
+class EventForm(ModelForm):
+    class Meta:
+        model = Event
+        fields = '__all__'
