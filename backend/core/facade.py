@@ -8,10 +8,10 @@ from django import forms
 STATUS_MSG = (
     ("Order placed" , "Order placed"),
     ("order on the way" , "order on the way"),
-    ("Pedido Entregue", "Order Delivered"),
+    ("Order Delivered", "Order Delivered"),
     ("Request under Analysis", "Request under Analysis"),
-    ("Pedido Taxado", "Taxed order"),
-    ("Endereço não encontrado", "address not found"),
+    ("Taxed order", "Taxed order"),
+    ("address not found", "address not found"),
     ("Problems in sending", "Problems in sending")
 )
 
