@@ -4,7 +4,7 @@ from .models import ClientUser, PartnerUser, Event
 from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator
 from .forms import ClientUserForm, PartnerUserForm, EventForm
 from .facade import UserFacade, ShortcutsFacade
-
+from datetime import date
 
 def detailClient(request):
     user = UserFacade.getUser(ClientUser, request.user.username)
@@ -43,7 +43,11 @@ def editPartner(request):
 def detailSchedule(request):
     user = UserFacade.getUser(PartnerUser, request.user.username)
     schedule = Event.objects.filter(partner = user)
-    return ShortcutsFacade.callRender(request, "core/user/partner/schedule.html", {"schedule": schedule}) 
+    data = {
+        "schedule": schedule,
+        "today": date.today()
+    }
+    return ShortcutsFacade.callRender(request, "core/user/partner/schedule.html", data) 
 
 def addEvent(request):
     if request.method == 'POST':
@@ -57,4 +61,4 @@ def addEvent(request):
     else:
         form = EventForm()
     data = {'title': 'Add Schedule Event', 'form': form}
-    return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)     
+    return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)
