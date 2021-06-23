@@ -39,4 +39,13 @@ class PartnerUserForm(ModelForm):
 class EventForm(ModelForm):
     class Meta:
         model = Event
-        fields = '__all__'
+        fields = ['address', 'arrival', 'departure']
+        widgets = {
+            'departure': FormFacade.dateInput(),
+            'arrival': FormFacade.dateInput()
+        }
+
+        input_formats = {
+            'departure': ('%Y-%m-%d',),
+            'arrival': ('%Y-%m-%d',)
+        }

@@ -56,7 +56,7 @@ def addEvent(request):
             event = form.save(commit = False)
             user = UserFacade.getUser(PartnerUser, request.user.username)
             event.partner = user
-            event.save
+            event.save()
             return ShortcutsFacade.callRedirect("detailSchedule")
     else:
         form = EventForm()
