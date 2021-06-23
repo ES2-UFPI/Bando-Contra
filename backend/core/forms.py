@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from .models import ClientUser, PartnerUser, Event
 from .facade import FormFacade
+from django.core.exceptions import ValidationError
 
 class ClientUserForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -20,7 +21,6 @@ class ClientUserForm(ModelForm):
         input_formats = {
             'bornDate': ('%Y-%m-%d',)
         }
-
 
 class PartnerUserForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -49,3 +49,11 @@ class EventForm(ModelForm):
             'departure': ('%Y-%m-%d',),
             'arrival': ('%Y-%m-%d',)
         }
+        
+    def clean(self):
+        cleanedData = super().clean()
+        arrival = cleanedData.get("arrival")
+        departure = cleanedData.get("departure")
+        if arrival and departure:
+            if departure > arrival:
+                raise ValidationError("Departure cannot be later than arrival!")
