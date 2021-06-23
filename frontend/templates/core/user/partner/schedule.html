@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Schedule{% endblock %}
+
+{% block userType %}
+<a class="dropdown-item" href="{% url 'detail_partner' %}">
+    <div style="clear: left;">
+        <div style="float: left;" class="me-1">
+            <span class="material-icons-outlined">
+                account_circle
+            </span>
+        </div>
+        <p class="mb-0">Profile</p>
+    </div>
+</a>
+{% endblock %}
+
+
+{% block content %}
+<main>
+    <nav class="mb-2">
+        <div class="nav nav-tabs">
+            <button class="nav-link" id="all_btn">All</button>
+            <button class="nav-link active" id="not_done_btn">Not done</button>
+            <button class="nav-link" id="done_btn">Done</button>
+        </div>
+    </nav>
+
+    {% for event in schedule %}
+
+        {% if event.arrival > today %}
+        <div class="card mb-2 event not_done">
+        {% else %}
+        <div class="card mb-2 event done" hidden>
+        {% endif %}
+            <div class="card-header">
+                {{ event.departure }} - {{ event.arrival }}
+            </div>
+            <div class="card-body">
+                <div class="card-title">
+                    {% if event.departure > today %}
+                        <span class="badge bg-primary">Not started</span>
+                    {% elif event.arrival > today %}
+                        <span class="badge bg-success">Current</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Done</span>
+                    {% endif %}
+                </div>
+                <p class="card-text">{{ event.address }}</p>
+
+                <a href="#" class="btn btn-outline-primary">Edit</a>
+            </div>
+        </div>
+    {% endfor %}
+    <a href="#" class="btn btn-outline-primary mt-1">Add</a>
+</main>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'js/schedule-control.js' %}"></script>
+{% endblock %}
