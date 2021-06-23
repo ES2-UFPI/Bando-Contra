@@ -49,3 +49,20 @@ class Event(models.Model):
     class Meta:
         verbose_name = "Event"
         ordering = ['departure']
+
+class Service(models.Model):
+    itemDescription = ModelField.createCharField("Item Description", 300)
+    quantity =  ModelField.createIntergerField("Quantity")
+    productStatus = ModelField.createCharField("Product Status", 100)
+    problemDescription = ModelField.createCharField("problem description", 200)
+    itemValue = ModelField.createFloatField("Item Value")
+    impost = ModelField.createFloatField("Impost")
+    dynamicRate = ModelField.createFloatField("Dynamic Rate")
+    amount = ModelField.createFloatField("Amount")
+    address = ModelField.createCharField("Address", 100)
+    requestDate = ModelField.createDateField("Request Date")
+    orderPlacementDate = ModelField.createDateField("Order Placement Date")
+    deliveryDate = ModelField.createDateField("Delivery Date")
+    taxation = ModelField.createBooleanField("Taxation")
+    clientUser = ModelField.createForeignKey(ClientUser)
+    event = ModelField.createForeignKey(Event)
