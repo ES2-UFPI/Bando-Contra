@@ -26,6 +26,6 @@ urlpatterns = [
     path('user/client/edit_profile', views.editClient, name="editClient"),
     path('user/partner/sign_up', views.addPartner, name="addPartner"),
     path('user/partner/edit_profile', views.editPartner, name="editPartner"),
-    path('user/partner/detail_schedule', views.detailSchedule, name='detailSchedule'),
+    path('user/partner/schedule', views.detailSchedule, name='detailSchedule'),
     path('user/partner/add_event', views.addEvent, name='addEvent')
 ]
