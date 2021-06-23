@@ -1,1 +1,15 @@
-{{title}}
+{% extends 'core/form.html' %}
+{% load static %}
+
+{% block userType %}
+<a class="dropdown-item" href="{% url 'detail_partner' %}">
+    <div style="clear: left;">
+        <div style="float: left;" class="me-1">
+            <span class="material-icons-outlined">
+                account_circle
+            </span>
+        </div>
+        <p class="mb-0">{{title}}</p>
+    </div>
+</a>
+{% endblock %}

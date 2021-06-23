@@ -5,7 +5,6 @@ from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator
 from .forms import ClientUserForm, PartnerUserForm, EventForm
 from .facade import UserFacade, ShortcutsFacade
 
-
 def detailClient(request):
     user = UserFacade.getUser(ClientUser, request.user.username)
     context = UserContext(user)
@@ -52,7 +51,7 @@ def addEvent(request):
             event = form.save(commit = False)
             user = UserFacade.getUser(PartnerUser, request.user.username)
             event.partner = user
-            event.save
+            event.save()
             return ShortcutsFacade.callRedirect("detailSchedule")
     else:
         form = EventForm()

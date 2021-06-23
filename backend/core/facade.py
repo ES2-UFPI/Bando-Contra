@@ -33,9 +33,9 @@ class ModelField:
         return models.FileField("Document", storage=STORAGE)
 
     @staticmethod
-    def createCharField(label, max_length, choice=opc):
+    def createCharField(label, max_length, choice=[]):
 
-        if opc.__len__() == 0:
+        if choice.__len__() == 0:
             return models.CharField(label, max_length = max_length, default = None)
         else:
             return models.CharField(label, max_length = max_length, choices=opc)
@@ -82,5 +82,3 @@ class FormFacade:
     @staticmethod
     def phoneInput():
         return forms.TextInput(attrs = {'type': 'tel'})
-    
-    

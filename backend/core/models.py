@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from .facade import ModelField
-from .facade import UserFacade
+from .facade import ModelField, UserFacade
 from abc import abstractmethod
 
 @abstractmethod
@@ -24,7 +23,6 @@ class ClientUser (User):
     class Meta:
         verbose_name = "Client"
 
-
 class PartnerUser (User):
     nationality = ModelField.createCharField("Nationality", 50)
     # document = ModelField.createFileField()
@@ -42,8 +40,8 @@ class PartnerUser (User):
 
 class Event(models.Model):
     address = ModelField.createCharField("Address", 100)
-    arrival =  ModelField.createDateField("Arrival Date")
-    departure =  ModelField.createDateField("Departure Date")
+    arrival = ModelField.createDateField("Arrival Date")
+    departure = ModelField.createDateField("Departure Date")
     partner = ModelField.createForeignKey(PartnerUser)
     
     class Meta:
