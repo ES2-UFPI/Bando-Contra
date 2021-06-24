@@ -1,8 +1,8 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import User
-from .models import ClientUser, PartnerUser, Event
+from .models import ClientUser, PartnerUser, Event, Service
 from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator
-from .forms import ClientUserForm, PartnerUserForm, EventForm
+from .forms import ClientUserForm, PartnerUserForm, EventForm, ServiceForm
 from .facade import UserFacade, ShortcutsFacade
 from datetime import date
 
@@ -62,3 +62,17 @@ def addEvent(request):
         form = EventForm()
     data = {'title': 'Add Schedule Event', 'form': form}
     return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)
+
+def addService(request):
+    if request.method == 'POST':
+        form = ServiceForm(request.POST)
+        if form.is_valid():
+            service = form.save(commit=False)
+            user = UserFacade.getUser(ClientUser, request.user.username)
+            service.clientUser = user
+            service.save()
+            return ShortcutsFacade.callRedirect("detailService")
+    else:
+        form = ServiceForm()
+    data = {'title':'Add Service', 'form': form}
+    return ShortcutsFacade.callRender(request, "core/user/client/addService.html", data)
