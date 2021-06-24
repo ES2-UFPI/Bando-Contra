@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import ClientUser, PartnerUser, Event
+from .models import ClientUser, PartnerUser, Event, Service
 from .facade import FormFacade
 from django.core.exceptions import ValidationError
 
@@ -57,3 +57,10 @@ class EventForm(ModelForm):
         if arrival and departure:
             if departure > arrival:
                 raise ValidationError("Departure cannot be later than arrival!")
+
+class ServiceForm(ModelForm):
+    class Meta:
+        model = Service
+        fields = "__all__"
+        exclude = ('clientUser', 'event')
+        
