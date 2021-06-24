@@ -63,3 +63,4 @@ class ServiceForm(ModelForm):
         model = Service
         fields = "__all__"
         exclude = ('clientUser', 'event')
+        
