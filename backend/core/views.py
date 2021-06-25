@@ -18,7 +18,7 @@ def detailPartner(request):
     return context.detailView(request, assessment)
 
 def temporaryLogin(request):
-    user = User.objects.get(username='partner1')
+    user = User.objects.get(username='user1')
     login(request, user)
     return ShortcutsFacade.callRender(request, "core/user/client/detail.html")
 
