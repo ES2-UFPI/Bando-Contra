@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
 from .storage import OverwriteStorage
 from django import forms
+from django.http import HttpResponse, Http404
 
 STATUS_MSG = (
     ("Order placed" , "Order placed"),
@@ -87,3 +88,11 @@ class FormFacade:
     @staticmethod
     def phoneInput():
         return forms.TextInput(attrs = {'type': 'tel'})
+
+class HttpFacade:
+    @staticmethod
+    def response():
+        return HttpResponse()
+    @staticmethod
+    def error404():
+        raise Http404

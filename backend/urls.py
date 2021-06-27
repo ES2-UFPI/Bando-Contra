@@ -28,5 +28,6 @@ urlpatterns = [
     path('user/partner/edit_profile', views.editPartner, name="editPartner"),
     path('user/partner/schedule', views.detailSchedule, name='detailSchedule'),
     path('user/partner/add_event', views.addEvent, name='addEvent'),
-    path('user/partner/edit_event/<int:pk>', views.editEvent, name='editEvent')
+    path('user/partner/edit_event/<int:pk>', views.editEvent, name='editEvent'),
+    path('user/partner/delete_event/<int:pk>', views.deleteEvent, name='deleteEvent'),
 ]
