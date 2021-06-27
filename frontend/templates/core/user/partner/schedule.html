@@ -30,9 +30,9 @@
     {% for event in schedule %}
 
         {% if event.arrival > today %}
-        <div class="card mb-2 event not_done">
+        <div class="card mb-2 event not_done" id="event_{{ event.id }}_">
         {% else %}
-        <div class="card mb-2 event done" hidden>
+        <div class="card mb-2 event done" id="event_{{ event.id }}_" hidden>
         {% endif %}
             <div class="card-header">
                 {{ event.departure }} - {{ event.arrival }}
@@ -50,6 +50,33 @@
                 <p class="card-text">{{ event.address }}</p>
 
                 <a href="{% url 'editEvent' event.id %}" class="btn btn-outline-primary">Edit</a>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger m-3" data-bs-toggle="modal" data-bs-target="#Modal_event_{{ event.id }}_">
+                    <span class="material-icons">delete</span>
+                </button>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="Modal_event_{{ event.id }}_" tabindex="-1" aria-labelledby="#ModalLabel_event_{{ event.id }}_" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="#ModalLabel_event_{{ event.id }}_">Delete event: {{ event.address }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-danger" role="alert">
+                                ATTENTION: This is an irreversible operation.
+                            </div>
+                            Are you sure you want to delete this event?
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" id="delete" class="btn btn-danger" data-link="{% url 'deleteEvent' event.id %}" data-card="event_{{ event.id }}_">Delete</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     {% endfor %}
@@ -60,4 +87,5 @@
 
 {% block scripts %}
 <script src="{% static 'js/schedule-control.js' %}"></script>
+<script src="{% static 'js/delete_ajax.js' %}"></script>
 {% endblock %}
