@@ -1,6 +1,15 @@
 from abc import ABC, abstractmethod
 from .forms import ClientUserForm, PartnerUserForm
 from .facade import ShortcutsFacade
+from .models import Event
+
+
+def pairEvent(date):
+    events = Event.objects.all()
+
+    for event in events:
+        if(event.arrival <= date and date <= event.departure):
+            return event
 
 class UserContext:
     def __init__(self, user, userForm=None):
