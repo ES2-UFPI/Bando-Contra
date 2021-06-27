@@ -71,12 +71,11 @@ def addService(request):
             user = UserFacade.getUser(ClientUser, request.user.username)
             service.clientUser = user
             service.save()
-            return ShortcutsFacade.callRedirect("detailService")
+            return ShortcutsFacade.callRedirect("detailService", pk = service.id)
     else:
         form = ServiceForm()
     data = {'title':'Add Service', 'form': form}
     return ShortcutsFacade.callRender(request, "core/user/client/addService.html", data)
-
 
 def editService(request, pk):
     service = ModelFacade.getModel(Service, id = pk)
@@ -85,12 +84,19 @@ def editService(request, pk):
         form = ServiceForm(request.POST, instance = service)
         if form.is_valid():
             service.save()
-            return ShortcutsFacade.callRedirect("detailService")
+            return ShortcutsFacade.callRedirect("detailService", pk = service.id)
     else:
         form = ServiceForm(instance = service)
     data = {'title':'Edit Service', 'form': form}
     return ShortcutsFacade.callRender(request, "core/user/client/addService.html", data)
     
+def detailService(request, pk):
+    service = Service.objects.get(id = pk)
+    data = {
+        "service": service,
+    }
+    
+    return ShortcutsFacade.callRender(request, "core/user/service.html", data) 
 
 def editEvent(request, pk):
     event = ModelFacade.getModel(Event, id = pk)
@@ -103,7 +109,6 @@ def editEvent(request, pk):
         form = EventForm(instance = event)
     data = {'title': 'Edit Schedule Event', 'form': form}
     return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)
-
 
 def deleteEvent(request, pk):
     event = ModelFacade.getModel(Event, id=pk)

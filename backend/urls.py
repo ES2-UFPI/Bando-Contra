@@ -32,4 +32,5 @@ urlpatterns = [
     path('user/partner/add_event', views.addEvent, name='addEvent'),
     path('user/partner/edit_event/<int:pk>', views.editEvent, name='editEvent'),
     path('user/partner/delete_event/<int:pk>', views.deleteEvent, name='deleteEvent'),
+    path('user/detail_service/<int:pk>', views.detailService, name='detailService'),
 ]

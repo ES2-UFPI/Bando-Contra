@@ -63,8 +63,8 @@ class ShortcutsFacade:
         return render(request, template, data)
 
     @staticmethod
-    def callRedirect(name):
-        return redirect(name)
+    def callRedirect(name, *args, **kwargs):
+        return redirect(name, *args, **kwargs)
 
 class ModelFacade:
     @staticmethod
