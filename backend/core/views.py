@@ -1,7 +1,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import User
 from .models import ClientUser, PartnerUser, Event, Service
-from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator
+from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator, pairEvent
 from .forms import ClientUserForm, PartnerUserForm, EventForm, ServiceForm
 from .facade import UserFacade, ShortcutsFacade, ModelFacade, HttpFacade
 from datetime import date
@@ -70,6 +70,7 @@ def addService(request):
             service = form.save(commit=False)
             user = UserFacade.getUser(ClientUser, request.user.username)
             service.clientUser = user
+            service.event = pairEvent(service.orderPlacementDate) #TODO Check if this is the correct date to filter
             service.save()
             return ShortcutsFacade.callRedirect("detailService", pk = service.id)
     else:
