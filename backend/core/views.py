@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .models import ClientUser, PartnerUser, Event, Service
 from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator
 from .forms import ClientUserForm, PartnerUserForm, EventForm, ServiceForm
-from .facade import UserFacade, ShortcutsFacade, ModelFacade
+from .facade import UserFacade, ShortcutsFacade, ModelFacade, HttpFacade
 from datetime import date
 
 def detailClient(request):
@@ -89,3 +89,14 @@ def editEvent(request, pk):
     data = {'title': 'Edit Schedule Event', 'form': form}
     return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)
 
+
+def deleteEvent(request, pk):
+    event = ModelFacade.getModel(Event, id=pk)
+
+    currentUser = UserFacade.getUser(PartnerUser, request.user.username)
+    if event.partner != currentUser:
+        HttpFacade.error404()
+
+    event.delete()
+
+    return HttpFacade.response()
