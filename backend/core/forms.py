@@ -63,4 +63,15 @@ class ServiceForm(ModelForm):
         model = Service
         fields = "__all__"
         exclude = ('clientUser', 'event')
+        widgets = {
+            'requestDate': FormFacade.dateInput(),
+            'orderPlacementDate': FormFacade.dateInput(),
+            'deliveryDate': FormFacade.dateInput()
+        }
+        
+        input_formats = {
+            'requestDate': ('%Y-%m-%d',),
+            'orderPlacementDate': ('%Y-%m-%d',),
+            'deliveryDate': ('%Y-%m-%d',)
+        }
         
