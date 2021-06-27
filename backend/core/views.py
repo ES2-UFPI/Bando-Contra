@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .models import ClientUser, PartnerUser, Event, Service
 from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator
 from .forms import ClientUserForm, PartnerUserForm, EventForm, ServiceForm
-from .facade import UserFacade, ShortcutsFacade
+from .facade import UserFacade, ShortcutsFacade, ModelFacade
 from datetime import date
 
 def detailClient(request):
@@ -76,3 +76,16 @@ def addService(request):
         form = ServiceForm()
     data = {'title':'Add Service', 'form': form}
     return ShortcutsFacade.callRender(request, "core/user/client/addService.html", data)
+    
+def editEvent(request, pk):
+    event = ModelFacade.getModel(Event, id = pk)
+    if request.method == 'POST':
+        form = EventForm(request.POST, instance = event)
+        if form.is_valid():
+            form.save()
+            return ShortcutsFacade.callRedirect("detailSchedule")
+    else:
+        form = EventForm(instance = event)
+    data = {'title': 'Edit Schedule Event', 'form': form}
+    return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)
+

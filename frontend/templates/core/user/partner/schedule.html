@@ -49,11 +49,11 @@
                 </div>
                 <p class="card-text">{{ event.address }}</p>
 
-                <a href="#" class="btn btn-outline-primary">Edit</a>
+                <a href="{% url 'editEvent' event.id %}" class="btn btn-outline-primary">Edit</a>
             </div>
         </div>
     {% endfor %}
-    <a href="#" class="btn btn-outline-primary mt-1">Add</a>
+    <a href="{% url 'addEvent' %}" class="btn btn-outline-primary mt-1">Add</a>
 </main>
 {% endblock %}
 
