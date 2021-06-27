@@ -36,6 +36,9 @@ jobs:
     name: tests
     
     steps:
+      - name: check python
+        run: python --version
+
       - name: Checkout
         uses: actions/checkout@v2
 
