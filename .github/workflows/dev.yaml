@@ -45,6 +45,7 @@ jobs:
     
     steps:
       - name: Checkout
-          uses: actions/checkout@v2
+        uses: actions/checkout@v2
+        
       - name: Run tests
         run: python manage.py test backend.core.tests
