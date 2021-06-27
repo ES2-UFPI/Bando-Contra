@@ -76,7 +76,22 @@ def addService(request):
         form = ServiceForm()
     data = {'title':'Add Service', 'form': form}
     return ShortcutsFacade.callRender(request, "core/user/client/addService.html", data)
+
+
+def editService(request, pk):
+    service = ModelFacade.getModel(Service, id = pk)
+
+    if request.method == 'POST':
+        form = ServiceForm(request.POST, instance = service)
+        if form.is_valid():
+            service.save()
+            return ShortcutsFacade.callRedirect("detailService")
+    else:
+        form = ServiceForm(instance = service)
+    data = {'title':'Edit Service', 'form': form}
+    return ShortcutsFacade.callRender(request, "core/user/client/addService.html", data)
     
+
 def editEvent(request, pk):
     event = ModelFacade.getModel(Event, id = pk)
     if request.method == 'POST':
