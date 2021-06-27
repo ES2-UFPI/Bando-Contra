@@ -65,6 +65,11 @@ class ShortcutsFacade:
     def callRedirect(name):
         return redirect(name)
 
+class ModelFacade:
+    @staticmethod
+    def getModel(model, *args, **kwargs):
+        return get_object_or_404(model, *args, **kwargs)
+
 class UserFacade:
     @staticmethod
     def addMethodToUser(methodName,method):
