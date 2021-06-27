@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block userType %}
+<a class="dropdown-item" href="{% url 'detail_client' %}">
+    <div style="clear: left;">
+        <div style="float: left;" class="me-1">
+            <span class="material-icons-outlined">
+                account_circle
+            </span>
+        </div>
+        <p class="mb-0">Profile</p>
+    </div>
+</a>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="card">
+        <h5 class="card-header">Item Description</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.itemDescription }}</p>
+        </div>
+    </div> <br>
+    
+    <div class="card">
+        <h5 class="card-header">Quantity</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.quantity }}</p>
+        </div>
+    </div> <br>
+
+    <div class="card">
+        <h5 class="card-header">Product Status</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.productStatus }}</p>
+        </div>
+    </div> <br>
+
+    <div class="card">
+        <h5 class="card-header">Problem Description</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.problemDescription }}</p>
+        </div>
+    </div> <br>
+
+    <div class="card">
+        <h5 class="card-header">Item Value</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.itemValue }}</p>
+        </div>
+    </div> <br>
+
+    <div class="card">
+        <h5 class="card-header">Impost</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.impost }}</p>
+        </div>
+    </div> <br>
+
+    <div class="card">
+        <h5 class="card-header">Dynamic Rate</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.dynamicRate }}</p>
+        </div>
+    </div> <br>
+
+    <div class="card">
+        <h5 class="card-header">Amount</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.amount }}</p>
+        </div>
+    </div> <br>
+
+    <div class="card">
+        <h5 class="card-header">Address</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.address }}</p>
+        </div>
+    </div> <br>
+
+    <div class="card">
+        <h5 class="card-header">Request Date</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.requestDate }}</p>
+        </div>
+    </div> <br>
+
+    <div class="card">
+        <h5 class="card-header">Order Placement Date</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.orderPlacementDate }}</p>
+        </div>
+    </div> <br>
+
+    <div class="card">
+        <h5 class="card-header">Delivery Date</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.deliveryDate }}</p>
+        </div>
+    </div> <br>
+
+    <div class="card">
+        <h5 class="card-header">Taxation</h5>
+        <div class="card-body">
+            <p class="card-text">{{ service.taxation }}</p>
+        </div>
+    </div> <br>
+</main>
+{% endblock %}
