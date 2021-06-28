@@ -24,6 +24,13 @@ urlpatterns = [
     path('', views.temporaryLogin, name="temporary_login"),
     path('user/client/sign_up', views.addClient, name="addClient"),
     path('user/client/edit_profile', views.editClient, name="editClient"),
+    path('user/client/add_service', views.addService, name="addService"),
+    path('user/client/edit_service/<int:pk>', views.editService, name="editService"),
     path('user/partner/sign_up', views.addPartner, name="addPartner"),
     path('user/partner/edit_profile', views.editPartner, name="editPartner"),
+    path('user/partner/schedule', views.detailSchedule, name='detailSchedule'),
+    path('user/partner/add_event', views.addEvent, name='addEvent'),
+    path('user/partner/edit_event/<int:pk>', views.editEvent, name='editEvent'),
+    path('user/partner/delete_event/<int:pk>', views.deleteEvent, name='deleteEvent'),
+    path('user/detail_service/<int:pk>', views.detailService, name='detailService'),
 ]

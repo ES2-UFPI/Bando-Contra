@@ -4,40 +4,58 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
 from .storage import OverwriteStorage
 from django import forms
+from django.http import HttpResponse, Http404
+
+STATUS_MSG = (
+    ("Order placed" , "Order placed"),
+    ("order on the way" , "order on the way"),
+    ("Order Delivered", "Order Delivered"),
+    ("Request under Analysis", "Request under Analysis"),
+    ("Taxed order", "Taxed order"),
+    ("address not found", "address not found"),
+    ("Problems in sending", "Problems in sending")
+)
 
 STORAGE=OverwriteStorage(location="_private/users/documents")
 
 class ModelField:
-    def createAddress ():
-        return models.CharField("Address", max_length = 100, default = None)
     
-    def createCpf ():
-        return models.CharField("CPF", max_length = 11, default = None)
-    
-    def createDate (label):
+    @staticmethod
+    def createDateField (label):
         return models.DateField(label, default = None)
     
-    def createPhone ():
+    @staticmethod
+    def createPhoneField ():
         phone_regex = RegexValidator(regex=r'\(\d{2}\)\d{4,5}-\d{4}', message="Insert a valid phone number. Examples: (99)99999-9999; (99)9999-9999")
         return models.CharField("Phone Number", max_length = 18, default = None, validators = [phone_regex])
 
-    def createNationality ():
-        return models.CharField("Nationality", max_length = 50, default = None)
-
-    def createValidation ():
-        return models.BooleanField("Validation", default = False)
-
-    def createAssessmentSum ():
-        return models.IntegerField ("Assessment Sum", default = 0)
-
-    def createAssessmentCount ():
-        return models.IntegerField ("Assessment Count", default = 0)
-
-    def createObservation ():
-        return models.CharField("Observation", max_length = 5000, default = None)
-
-    def createDocument ():
+    @staticmethod
+    def createFileField ():
         return models.FileField("Document", storage=STORAGE)
+
+    @staticmethod
+    def createCharField(label, max_length, choice=[]):
+
+        if choice.__len__() == 0:
+            return models.CharField(label, max_length = max_length, default = None)
+        else:
+            return models.CharField(label, max_length = max_length, choices=opc)
+    
+    @staticmethod
+    def createIntergerField(label):
+        return models.IntegerField(label, default = 0)
+
+    @staticmethod
+    def createBooleanField(label):
+        return models.BooleanField(label, default = False)
+
+    @staticmethod
+    def createForeignKey(model):
+        return models.ForeignKey(model, on_delete=models.CASCADE, default=None)
+    
+    @staticmethod
+    def createFloatField(label):
+        return models.FloatField(label, default = 0)
 
 class ShortcutsFacade:
     @staticmethod
@@ -45,8 +63,13 @@ class ShortcutsFacade:
         return render(request, template, data)
 
     @staticmethod
-    def callRedirect(name):
-        return redirect(name)
+    def callRedirect(name, *args, **kwargs):
+        return redirect(name, *args, **kwargs)
+
+class ModelFacade:
+    @staticmethod
+    def getModel(model, *args, **kwargs):
+        return get_object_or_404(model, *args, **kwargs)
 
 class UserFacade:
     @staticmethod
@@ -65,5 +88,11 @@ class FormFacade:
     @staticmethod
     def phoneInput():
         return forms.TextInput(attrs = {'type': 'tel'})
-    
-    
+
+class HttpFacade:
+    @staticmethod
+    def response():
+        return HttpResponse()
+    @staticmethod
+    def error404():
+        raise Http404
