@@ -3,7 +3,6 @@ from .forms import ClientUserForm, PartnerUserForm
 from .facade import ShortcutsFacade
 from .models import Event
 
-
 def pairEvent(date):
     events = Event.objects.all()
 

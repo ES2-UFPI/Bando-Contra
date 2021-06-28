@@ -31,7 +31,7 @@ class PartnerUser (User):
     assessmentCount = ModelField.createIntergerField("Assessment Count")
     observation = ModelField.createCharField("Observation", 5000)
     phone = ModelField.createPhoneField()
-
+    
     def getTemplatesLocation(self):
         return 'core/user/partner/'
     
