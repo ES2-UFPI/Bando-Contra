@@ -1,5 +1,6 @@
 from django.test import TestCase
-from .models import Event, PartnerUser, ClientUser
+from django.test import Client
+from .models import Event, PartnerUser, ClientUser, Service
 import datetime
 
 #python manage.py test backend.core.tests
@@ -77,3 +78,24 @@ class TestDeleteEventView(TestCase):
     def testNotFound(self):
         response = self.client.get('/user/partner/edit_event/{}'.format(2))
         self.assertEqual(response.status_code, 404)
+
+class TestListClientServices(TestCase):
+    def setUp(self):
+        self._partnerUser = PartnerUser(nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!')
+        self._partnerUser.save()
+        self._event1 = Event(address = 'test1', arrival = datetime.date(2021, 3, 17), departure = datetime.date(2021, 2, 17),partner = self._partnerUser)
+        self._event1.save()
+        self._event2 = Event(address = 'test2', arrival = datetime.date(2021, 3, 17), departure = datetime.date(2021, 2, 17),partner = self._partnerUser)
+        self._event2.save()
+        self._user = ClientUser(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="user1", password="user1")
+        self._user.save()
+        self._service1 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event1)
+        self._service2 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event2)
+
+        self.client.login(username="user1", password="user1")
+
+    def testUrl(self):
+        # c = Client()
+
+        response = self.client.get('/user/client/list_services/')
+        self.assertEqual(response.status_code, 200)
