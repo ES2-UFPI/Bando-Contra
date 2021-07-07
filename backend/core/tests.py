@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.test import Client
 from .models import Event, PartnerUser, ClientUser, Service
 import datetime
+from django.contrib.auth.models import User
 
 #python manage.py test backend.core.tests
 
@@ -92,10 +93,20 @@ class TestListClientServices(TestCase):
         self._service1 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event1)
         self._service2 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event2)
 
-        self.client.login(username="user1", password="user1")
-
     def testUrl(self):
-        # c = Client()
-
+        self.client.get('/testLogin/user1')
         response = self.client.get('/user/client/list_services/')
         self.assertEqual(response.status_code, 200)
+
+    def testCorrectTemplates(self):
+        self.client.get('/testLogin/user1')
+        response = self.client.get('/user/client/list_services/')
+        self.assertTemplateUsed(response, 'core/user/client/listServices.html')
+
+    def testNotFound(self):
+        response = self.client.get('/user/client/list_services/')
+        self.assertEqual(response.status_code, 404)
+
+    def testListServices(self):
+        self.client.get('/testLogin/user1')
+        response = self.client.get('/user/client/list_services/')

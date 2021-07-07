@@ -34,4 +34,5 @@ urlpatterns = [
     path('user/partner/delete_event/<int:pk>', views.deleteEvent, name='deleteEvent'),
     path('user/detail_service/<int:pk>', views.detailService, name='detailService'),
     path('user/client/list_services/', views.listClientServices, name='listServices'),
+    path('testLogin/<str:username>', views.testLogin)
 ]

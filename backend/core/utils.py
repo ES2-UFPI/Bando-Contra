@@ -54,7 +54,7 @@ class UserContext:
         return ShortcutsFacade.callRender(request, result, data)
 
     def listServicesView(self, request):
-        result = self._user.getTemplatesLocation() + "listServices"
+        result = self._user.getTemplatesLocation() + "listServices.html"
         data = {'services': Service.objects.filter(clientUser = self._user)}
         return ShortcutsFacade.callRender(request, result, data)
 
