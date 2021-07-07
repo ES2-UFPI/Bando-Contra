@@ -33,6 +33,7 @@ urlpatterns = [
     path('user/partner/edit_event/<int:pk>', views.editEvent, name='editEvent'),
     path('user/partner/delete_event/<int:pk>', views.deleteEvent, name='deleteEvent'),
     path('user/detail_service/<int:pk>', views.detailService, name='detailService'),
-    path('user/client/list_services/', views.listClientServices, name='listServices'),
+    path('user/client/list_services/', views.listClientServices, name='listClientServices'),
+    path('user/partner/list_services/', views.listPartnerServices, name='listPartnerServices'),
     path('testLogin/<str:username>', views.testLogin)
 ]

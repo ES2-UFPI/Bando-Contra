@@ -14,6 +14,9 @@ class ClientUser (User):
     phone = ModelField.createPhoneField()
     bornDate = ModelField.createDateField("Born Date")
 
+    def getServices(self):
+        return Service.objects.filter(clientUser=self)
+
     def getTemplatesLocation(self):
         return "core/user/client/"
 
@@ -32,6 +35,9 @@ class PartnerUser (User):
     observation = ModelField.createCharField("Observation", 5000)
     phone = ModelField.createPhoneField()
     
+    def getServices(self):
+        return Service.objects.filter(event__partner=self)
+
     def getTemplatesLocation(self):
         return 'core/user/partner/'
     
