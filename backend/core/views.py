@@ -22,6 +22,12 @@ def temporaryLogin(request):
     login(request, user)
     return ShortcutsFacade.callRender(request, "core/user/client/detail.html")
 
+def testLogin(request, username):
+    user = UserFacade.getUser(ClientUser, username=username)
+    login(request, user)
+
+    return HttpFacade.response()
+
 def addClient(request):
     creator = ClientCreator()
     return creator.addUser(request, "sign up")
@@ -121,3 +127,8 @@ def deleteEvent(request, pk):
     event.delete()
 
     return HttpFacade.response()
+
+def listClientServices(request):
+    user = UserFacade.getUser(ClientUser, request.user.username)
+    context = UserContext(user)
+    return context.listServicesView(request)
