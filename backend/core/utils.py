@@ -55,7 +55,7 @@ class UserContext:
 
     def listServicesView(self, request):
         result = self._user.getTemplatesLocation() + "listServices.html"
-        data = {'services': Service.objects.filter(clientUser = self._user)}
+        data = {'services': self._user.getServices()}
         return ShortcutsFacade.callRender(request, result, data)
 
 class UserCreator(ABC):
