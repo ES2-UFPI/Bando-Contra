@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from .forms import ClientUserForm, PartnerUserForm
 from .facade import ShortcutsFacade
 from .models import Event, Service
+from datetime import date
 
 def pairEvent(date):
     events = Event.objects.all()
@@ -55,7 +56,10 @@ class UserContext:
 
     def listServicesView(self, request):
         result = self._user.getTemplatesLocation() + "listServices.html"
-        data = {'services': self._user.getServices()}
+        data = {
+            'services': self._user.getServices(),
+            'today': date.today()
+            }
         return ShortcutsFacade.callRender(request, result, data)
 
 class UserCreator(ABC):
