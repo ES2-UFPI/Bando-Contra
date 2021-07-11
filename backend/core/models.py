@@ -52,7 +52,7 @@ class Event(models.Model):
     
     class Meta:
         verbose_name = "Event"
-        ordering = ['departure']
+        ordering = ['arrival']
 
 class Service(models.Model):
     itemDescription = ModelField.createCharField("Item Description", 300)

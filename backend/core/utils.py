@@ -9,7 +9,7 @@ def pairEvent(date):
     for event in events:
         if(event.arrival <= date and date <= event.departure):
             return event
-
+ 
 class UserContext:
     def __init__(self, user, userForm=None):
         self._user = user

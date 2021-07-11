@@ -1,8 +1,9 @@
+import datetime
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test import Client
 from .models import Event, PartnerUser, ClientUser, Service
-import datetime
-from django.contrib.auth.models import User
+from .forms import EventForm, binarySearch
 
 #python manage.py test backend.core.tests
 
@@ -24,7 +25,7 @@ class TestEditEventView(TestCase):
     def setUp(self):
         self.partnerUser = PartnerUser(nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!')
         self.partnerUser.save()
-        self.event = Event(address = 'rua 10 casa 20', arrival = datetime.date(2021, 3, 17), departure = datetime.date(2021, 2, 17),partner = self.partnerUser)
+        self.event = Event(address = 'rua 10 casa 20', arrival = datetime.date(2021, 3, 17), departure = datetime.date(2021, 3, 17),partner = self.partnerUser)
         self.event.save()
 
     def testUrl(self):
@@ -133,3 +134,81 @@ class TestListPartnerServices(TestCase):
     def testNotFound(self):
         response = self.client.get('/user/partner/list_services/')
         self.assertEqual(response.status_code, 404)
+
+class TestSearchModule(TestCase):
+    def testAverageCase(self):
+        array = [1,2,3,4,5]
+        value = 3
+        self.assertEqual(binarySearch(array, value), 2)
+
+    def testNotFoundCase1(self):
+        array = [1,2,4,5,6]
+        value = 3
+        self.assertEqual(binarySearch(array, value), 2)
+
+    def testNotFoundCase2(self):
+        array = [1,2,3,4,5]
+        value = 0
+        self.assertEqual(binarySearch(array, value), 0)
+
+    def testNotFoundCase3(self):
+        array = [1,2,3,4,5]
+        value = 6
+        self.assertEqual(binarySearch(array, value), 5)
+
+    def testFirstItemCase(self):
+        array = [1,2,3,4,5]
+        value = 1
+        self.assertEqual(binarySearch(array, value), 0)
+
+    def testLastItemCase(self):
+        array = [1,2,3,4,5]
+        value = 5
+        self.assertEqual(binarySearch(array, value), 4)
+
+    def testOneCase(self):
+        array = [1]
+        value = 1
+        self.assertEqual(binarySearch(array, value), 0)
+
+    def testTwoCases(self):
+        array = [1,2]
+        value = 1
+        self.assertEqual(binarySearch(array, value), 0)
+
+class TestEventForm(TestCase):
+    def setUp(self):
+        self.partnerUser = PartnerUser(nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!')
+        self.partnerUser.save()
+        self.event = Event(address = 'test', arrival = datetime.date(2021, 7, 11), departure = datetime.date(2021, 7, 18),partner = self.partnerUser)
+        self.event.save()
+        self.event = Event(address = 'test', arrival = datetime.date(2021, 7, 28), departure = datetime.date(2021, 7, 31),partner = self.partnerUser)
+        self.event.save()
+    
+    def testAddEvent(self):
+        form = EventForm({'address': 'test', 'arrival': datetime.date(2021, 8, 1), 'departure': datetime.date(2021, 8, 12)}, partnerUsername = self.partnerUser.username)
+        self.assertTrue(form.is_valid())
+    
+    def testAddEventBetweenEvents(self):
+        form = EventForm({'address': 'test', 'arrival': datetime.date(2021, 7, 19), 'departure': datetime.date(2021, 7, 27)}, partnerUsername = self.partnerUser.username)
+        self.assertTrue(form.is_valid())
+
+    def testAddFirstEvent(self):
+        form = EventForm({'address': 'test', 'arrival': datetime.date(2021, 7, 1), 'departure': datetime.date(2021, 7, 10)}, partnerUsername = self.partnerUser.username)
+        self.assertTrue(form.is_valid())
+
+    def testArrivalLaterThanDeparture(self):
+        form = EventForm({'address': 'test', 'arrival': datetime.date(2021, 8, 12), 'departure': datetime.date(2021, 8, 1)}, partnerUsername = self.partnerUser.username)
+        self.assertFalse(form.is_valid())
+
+    def testInvalidArrival(self):
+        form = EventForm({'address': 'test', 'arrival': datetime.date(2021, 7, 17), 'departure': datetime.date(2021, 7, 27)}, partnerUsername = self.partnerUser.username)
+        self.assertFalse(form.is_valid())
+
+    def testInvalidDeparture(self):
+        form = EventForm({'address': 'test', 'arrival': datetime.date(2021, 7, 19), 'departure': datetime.date(2021, 7, 29)}, partnerUsername = self.partnerUser.username)
+        self.assertFalse(form.is_valid())
+
+    def testInvalidArrivalAndDeparture(self):
+        form = EventForm({'address': 'test', 'arrival': datetime.date(2021, 7, 17), 'departure': datetime.date(2021, 7, 29)}, partnerUsername = self.partnerUser.username)
+        self.assertFalse(form.is_valid())
