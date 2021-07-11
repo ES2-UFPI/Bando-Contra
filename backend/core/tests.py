@@ -133,3 +133,24 @@ class TestListPartnerServices(TestCase):
     def testNotFound(self):
         response = self.client.get('/user/partner/list_services/')
         self.assertEqual(response.status_code, 404)
+
+class TestAuthentication(TestCase):
+    def setUp(self):
+        self.clientUser = ClientUser.objects.create(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="user1", password="user1")
+        self.clientUser.save()
+
+    def testLogoutUrl(self):
+        self.client.get('/testLogin/user1')
+        response = self.client.get('/accounts/logout/')
+        self.assertEqual(response.status_code, 302)
+
+    def testLogoutCorrectTemplates(self):
+        self.client.get('/testLogin/user1')
+        response = self.client.get('/accounts/logout/', follow=True)
+        self.assertTemplateUsed(response, 'registration/login.html')
+
+    def testLogout(self):
+        self.client.get('/testLogin/user1')
+        response = self.client.get('/accounts/logout/')
+        if response.wsgi_request.user.id != None:
+            self.fail("User is logged in")
