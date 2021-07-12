@@ -57,7 +57,7 @@ def detailSchedule(request):
 
 def addEvent(request):
     if request.method == 'POST':
-        form = EventForm(request.POST)
+        form = EventForm(request.POST, partnerUsername = request.user.username)
         if form.is_valid():
             event = form.save(commit = False)
             user = UserFacade.getUser(PartnerUser, request.user.username)
@@ -65,7 +65,7 @@ def addEvent(request):
             event.save()
             return ShortcutsFacade.callRedirect("detailSchedule")
     else:
-        form = EventForm()
+        form = EventForm( partnerUsername = None)
     data = {'title': 'Add Schedule Event', 'form': form}
     return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)
 
@@ -108,12 +108,12 @@ def detailService(request, pk):
 def editEvent(request, pk):
     event = ModelFacade.getModel(Event, id = pk)
     if request.method == 'POST':
-        form = EventForm(request.POST, instance = event)
+        form = EventForm(request.POST, instance = event, partnerUsername = request.user.username)
         if form.is_valid():
             form.save()
             return ShortcutsFacade.callRedirect("detailSchedule")
     else:
-        form = EventForm(instance = event)
+        form = EventForm(instance = event,  partnerUsername = None)
     data = {'title': 'Edit Schedule Event', 'form': form}
     return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)
 
