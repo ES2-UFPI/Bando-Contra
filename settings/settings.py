@@ -40,9 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms',
 
     # Third-party apps
+    'crispy_forms',
 
     # Local apps
     'backend.core.apps.DefaultApp',
@@ -126,6 +126,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # URLs to serve media and static files
 STATIC_URL = config('STATIC_URL', default='/static/')
 MEDIA_URL = config('MEDIA_URL', default='/media/')
+LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 # Directories to save media and compiled static files
 MEDIA_ROOT = BASE_DIR/'_public'/'media'
@@ -156,3 +157,4 @@ COMPRESS_JS_FILTERS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
