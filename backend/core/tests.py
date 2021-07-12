@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.test import Client
 from .models import Event, PartnerUser, ClientUser, Service
 import datetime
 from django.contrib.auth.models import User
