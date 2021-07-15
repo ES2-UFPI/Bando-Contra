@@ -33,7 +33,7 @@
                 </div>
                 <p>Status: {{ service.productStatus }}</p>
                 <a href="{% url 'detailService' service.id %}" id="detail-btn" class="btn btn-outline-primary">Detail</a>
-                {% block editButton %}{% endblock %}
+                {% block buttons %}{% endblock %}
             </div>
         </div>
     {% endfor %}

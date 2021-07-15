@@ -1,4 +1,4 @@
 {% extends 'core/user/listServices.html' %}
 {% load static %}
-
+{% block buttons %}<a href="{% url 'feedback' service.id %}" class="btn btn-outline-primary">Feedback</a>{% endblock %}
 {% block addButton %}<a href="{% url 'addService' %}" class="btn btn-outline-primary">add</a>{% endblock %}
