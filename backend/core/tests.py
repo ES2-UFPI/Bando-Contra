@@ -238,8 +238,27 @@ class TestUserForms(TestCase):
 
 class TestAuthentication(TestCase):
     def setUp(self):
-        self.clientUser = ClientUser.objects.create(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="user1", password="user1")
-        self.clientUser.save()
+        form = ClientUserForm({'username': 'user1', 'cpf': '00000000000', 'address': 'teste', 'phone':'(86)99999-9999', 'bornDate': datetime.date(2021, 8, 1), 'password1': 'senha159951', 'password2': 'senha159951', 'email': 'teste@teste.com', 'first_name': 'teste', 'last_name': 'teste'})
+        form.save()
+
+    def testLoginUrl(self):
+        response = self.client.get('/accounts/login/')
+        self.assertEqual(response.status_code, 200)
+
+    def testLoginCorrectTemplates(self):
+        response = self.client.get('/accounts/login/')
+        self.assertTemplateUsed(response, 'registration/login.html')
+
+    def testLogin(self):
+        response = self.client.post('/accounts/login/', {'username': 'user1', 'password': 'senha159951'})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.wsgi_request.user.username, 'user1')
+
+    def testLoginFail(self):
+        response = self.client.post('/accounts/login/', {'username': 'user1', 'password': 'senha159952'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/login.html')
+        self.assertNotEqual(response.wsgi_request.user.username, 'user1')
 
     def testLogoutUrl(self):
         self.client.get('/testLogin/user1')
