@@ -10,6 +10,18 @@ from django.forms.widgets import HiddenInput
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
 
+@login_required
+def home(request):
+
+    try:
+        user = UserFacade.getUser(ClientUser, request.user.username)
+        return ShortcutsFacade.callRedirect('detail_client')
+    except:
+        user = UserFacade.getUser(PartnerUser, request.user.username)
+    
+    return ShortcutsFacade.callRedirect('detail_partner')
+    
+
 def detailClient(request):
     user = UserFacade.getUser(ClientUser, request.user.username)
     context = UserContext(user)
@@ -23,7 +35,7 @@ def detailPartner(request):
     return context.detailView(request, assessment)
 
 def temporaryLogin(request):
-    user = User.objects.get(username='fjair5')
+    user = User.objects.get(username='fjair89')
     login(request, user)
     return ShortcutsFacade.callRender(request, "core/user/client/detail.html")
 

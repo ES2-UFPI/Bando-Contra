@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block serviceLinks %}
+         <a class="navbar-brand" href="{% url 'listPartnerServices' %}">Bando-Contra</a>
+{% endblock %}
+
 {% block title %}Profile{% endblock %}
 
 {% block userType %}

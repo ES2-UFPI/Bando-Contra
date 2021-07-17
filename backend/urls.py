@@ -22,7 +22,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('user/client/detail', views.detailClient, name="detail_client"),
     path('user/partner/detail', views.detailPartner, name="detail_partner"),
-    path('', views.temporaryLogin, name="temporary_login"),
+    path('', views.home, name="home"),
+    path('login/temporary', views.temporaryLogin, name="temporary_login"), #Apagar depois de fazer a tela de login
     path('user/client/sign_up', views.addClient, name="addClient"),
     path('user/client/edit_profile', views.editClient, name="editClient"),
     path('user/client/add_service', views.addService, name="addService"),

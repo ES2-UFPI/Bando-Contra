@@ -1,4 +1,25 @@
 {% extends 'core/user/listServices.html' %}
 {% load static %}
 
+{% block userType %}
+<a class="dropdown-item" href="{% url 'detail_partner' %}">
+    <div style="clear: left;">
+        <div style="float: left;" class="me-1">
+            <span class="material-icons-outlined">
+                account_circle
+            </span>
+        </div>
+        <p class="mb-0">Profile</p>
+    </div>
+</a>
+{% endblock %}
+
+{% block serviceLinks %}
+         <a class="navbar-brand" href="{% url 'listPartnerServices' %}">Bando-Contra</a>
+{% endblock %}
+
+{% block schuduleLink %}
+<a href="{% url 'detailSchedule'  %}" class="btn btn-outline-primary mb-5">Detail Schudule</a>
+{% endblock %}
+
 {% block buttons %}<a href="{% url 'editService' service.id %}" class="btn btn-outline-primary">Edit</a>{% endblock %}
