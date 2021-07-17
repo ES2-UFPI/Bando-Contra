@@ -32,7 +32,7 @@ class PartnerUser (User):
     validation = ModelField.createBooleanField("Validation")
     assessmentSum = ModelField.createIntergerField("Assessment Sum")
     assessmentCount = ModelField.createIntergerField("Assessment Count")
-    observation = ModelField.createCharField("Observation", 5000)
+    observation = ModelField.createCharField("Observation", 5000, null=True)
     phone = ModelField.createPhoneField()
     
     def getServices(self):
