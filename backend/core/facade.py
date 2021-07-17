@@ -57,6 +57,10 @@ class ModelField:
     def createFloatField(label):
         return models.FloatField(label, default = 0)
 
+    @staticmethod
+    def createTextField(label):
+        return models.TextField(label, default = None, null = True, blank = True)
+
 class ShortcutsFacade:
     @staticmethod
     def callRender(request, template, data={}):

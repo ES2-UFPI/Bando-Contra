@@ -2,7 +2,7 @@ from django.contrib.auth import login
 from django.contrib.auth.models import User
 from .models import ClientUser, PartnerUser, Event, Service
 from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator, pairEvent
-from .forms import ClientUserForm, PartnerUserForm, EventForm, ServiceForm
+from .forms import ClientUserForm, PartnerUserForm, EventForm, ServiceForm, ClientFeedbackForm
 from .facade import UserFacade, ShortcutsFacade, ModelFacade, HttpFacade
 from datetime import date
 from django.forms.widgets import HiddenInput
@@ -145,3 +145,16 @@ def listPartnerServices(request):
     user = UserFacade.getUser(PartnerUser, request.user.username)
     context = UserContext(user)
     return context.listServicesView(request)
+
+def feedback(request, pk):
+    service = ModelFacade.getModel(Service, id = pk)
+    if request.method == 'POST':
+        form = ClientFeedbackForm(request.POST)
+        if form.is_valid():
+            service.clientFeedback = form.cleaned_data['feedback']
+            service.save()
+            return ShortcutsFacade.callRedirect('listClientServices')
+    else:
+        form = ClientFeedbackForm()
+    data = {'title': 'Feedback', 'form': form}
+    return ShortcutsFacade.callRender(request, 'core/user/client/feedback.html', data)

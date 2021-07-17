@@ -36,5 +36,6 @@ urlpatterns = [
     path('user/detail_service/<int:pk>', views.detailService, name='detailService'),
     path('user/client/list_services/', views.listClientServices, name='listClientServices'),
     path('user/partner/list_services/', views.listPartnerServices, name='listPartnerServices'),
-    path('testLogin/<str:username>', views.testLogin)
+    path('testLogin/<str:username>', views.testLogin),
+    path('user/client/feedback/<int:pk>', views.feedback, name='feedback')
 ]
