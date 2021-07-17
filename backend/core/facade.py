@@ -34,12 +34,12 @@ class ModelField:
         return models.FileField("Document", storage=STORAGE)
 
     @staticmethod
-    def createCharField(label, max_length, choice=[]):
+    def createCharField(label, max_length, choice=[], null=False):
 
         if choice.__len__() == 0:
-            return models.CharField(label, max_length = max_length, default = None)
+            return models.CharField(label, max_length = max_length, default = None, null=True)
         else:
-            return models.CharField(label, max_length = max_length, choices=opc)
+            return models.CharField(label, max_length = max_length, choices=opc, null=True)
     
     @staticmethod
     def createIntergerField(label):

@@ -1,8 +1,9 @@
 import datetime
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.test import Client
 from .models import Event, PartnerUser, ClientUser, Service
-from .forms import EventForm, binarySearch
+from .forms import ClientUserForm, PartnerUserForm, EventForm, binarySearch
 
 #python manage.py test backend.core.tests
 
@@ -211,11 +212,53 @@ class TestEventForm(TestCase):
     def testInvalidArrivalAndDeparture(self):
         form = EventForm({'address': 'test', 'arrival': datetime.date(2021, 7, 17), 'departure': datetime.date(2021, 7, 29)}, partnerUsername = self.partnerUser.username)
         self.assertFalse(form.is_valid())
-        
+
+class TestUserForms(TestCase):
+
+    def testAddClient(self):
+        form = ClientUserForm({'username': 'teste', 'cpf': '00000000000', 'address': 'teste', 'phone':'(86)99999-9999', 'bornDate': datetime.date(2021, 8, 1), 'password1': 'senha159951', 'password2': 'senha159951', 'email': 'teste@teste.com', 'first_name': 'teste', 'last_name': 'teste'})
+        self.assertTrue(form.is_valid())
+        form.save()
+
+    def testAddParter(self):
+        form = PartnerUserForm({'username': 'teste', 'nationality': 'teste', 'phone':'(86)99999-9999', 'password1': 'senha159951', 'password2': 'senha159951', 'email': 'teste@teste.com', 'first_name': 'teste', 'last_name': 'teste'})
+        self.assertTrue(form.is_valid())
+        form.save()
+
+    def testCryptography(self):
+        form = ClientUserForm({'username': 'teste1', 'cpf': '00000000000', 'address': 'teste', 'phone':'(86)99999-9999', 'bornDate': datetime.date(2021, 8, 1), 'password1': 'senha159951', 'password2': 'senha159951', 'email': 'teste@teste.com', 'first_name': 'teste', 'last_name': 'teste'})
+        form.save()
+        user = User.objects.get(username='teste1')
+        self.assertNotEqual(user.password, 'senha159951')
+
+        form = PartnerUserForm({'username': 'teste2', 'nationality': 'teste', 'phone':'(86)99999-9999', 'password1': 'senha159951', 'password2': 'senha159951', 'email': 'teste@teste.com', 'first_name': 'teste', 'last_name': 'teste'})
+        form.save()
+        user = User.objects.get(username='teste2')
+        self.assertNotEqual(user.password, 'senha159951')
+
 class TestAuthentication(TestCase):
     def setUp(self):
-        self.clientUser = ClientUser.objects.create(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="user1", password="user1")
-        self.clientUser.save()
+        form = ClientUserForm({'username': 'user1', 'cpf': '00000000000', 'address': 'teste', 'phone':'(86)99999-9999', 'bornDate': datetime.date(2021, 8, 1), 'password1': 'senha159951', 'password2': 'senha159951', 'email': 'teste@teste.com', 'first_name': 'teste', 'last_name': 'teste'})
+        form.save()
+
+    def testLoginUrl(self):
+        response = self.client.get('/accounts/login/')
+        self.assertEqual(response.status_code, 200)
+
+    def testLoginCorrectTemplates(self):
+        response = self.client.get('/accounts/login/')
+        self.assertTemplateUsed(response, 'registration/login.html')
+
+    def testLogin(self):
+        response = self.client.post('/accounts/login/', {'username': 'user1', 'password': 'senha159951'})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.wsgi_request.user.username, 'user1')
+
+    def testLoginFail(self):
+        response = self.client.post('/accounts/login/', {'username': 'user1', 'password': 'senha159952'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'registration/login.html')
+        self.assertNotEqual(response.wsgi_request.user.username, 'user1')
 
     def testLogoutUrl(self):
         self.client.get('/testLogin/user1')

@@ -1,4 +1,5 @@
 from django.forms import ModelForm, Form, Textarea, CharField
+from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from .models import ClientUser, PartnerUser, Event, Service
 from .facade import FormFacade
@@ -19,16 +20,16 @@ def binarySearch(array, value):
     
     return end
 
-class ClientUserForm(ModelForm):
+class ClientUserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(ClientUserForm, self).__init__(*args, **kwargs)
         self.fields['email'].required = True
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
     
-    class Meta:
+    class Meta(UserCreationForm.Meta):
         model = ClientUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'cpf', 'address', 'phone', 'bornDate']
+        fields = UserCreationForm.Meta.fields + ('cpf', 'address', 'phone', 'bornDate', 'email', 'first_name', 'last_name')
         widgets = {
             'phone': FormFacade.phoneInput(),
             'bornDate': FormFacade.dateInput(),
@@ -38,16 +39,16 @@ class ClientUserForm(ModelForm):
             'bornDate': ('%Y-%m-%d',)
         }
 
-class PartnerUserForm(ModelForm):
+class PartnerUserForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(PartnerUserForm, self).__init__(*args, **kwargs)
         self.fields['email'].required = True
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
     
-    class Meta:
+    class Meta(UserCreationForm.Meta):
         model = PartnerUser
-        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'nationality', 'phone']
+        fields = UserCreationForm.Meta.fields + ('nationality', 'phone', 'email', 'first_name', 'last_name')
         widgets = {
             'phone': FormFacade.phoneInput(),
         }
