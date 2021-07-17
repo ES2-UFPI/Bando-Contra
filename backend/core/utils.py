@@ -73,7 +73,7 @@ class UserCreator(ABC):
             user = self.factoryMethod(request)
             if user != None:
                 user.save()
-                return ShortcutsFacade.callRedirect("detail_client")
+                return ShortcutsFacade.callRedirect("login")
             form = ClientUserForm(request.POST)
         else:
             form = self.getForm()

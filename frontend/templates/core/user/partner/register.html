@@ -1,6 +1,11 @@
 {% extends 'core/form.html' %}
 {% load static %}
 
+
+{% block serviceLinks %}
+         <a class="navbar-brand" href="{% url 'listPartnerServices' %}">Bando-Contra</a>
+{% endblock %}
+
 {% block userType %}
 <a class="dropdown-item" href="{% url 'detail_partner' %}">
     <div style="clear: left;">
