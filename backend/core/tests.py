@@ -98,8 +98,8 @@ class TestListClientServices(TestCase):
         self._event2.save()
         self._user = ClientUser(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="user1", password="user1")
         self._user.save()
-        self._service1 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event1)
-        self._service2 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event2)
+        self._service1 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, fixedTax=1, dynamicTax=1, totalValue=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event1)
+        self._service2 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, fixedTax=1, dynamicTax=1, totalValue=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event2)
 
     def testUrl(self):
         self.client.get('/testLogin/user1')
@@ -113,7 +113,7 @@ class TestListClientServices(TestCase):
 
     def testNotFound(self):
         response = self.client.get('/user/client/list_services/')
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 302)
 
 class TestListPartnerServices(TestCase):
     def setUp(self):
@@ -125,8 +125,8 @@ class TestListPartnerServices(TestCase):
         self._event2.save()
         self._user = ClientUser(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="user1", password="user1")
         self._user.save()
-        self._service1 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event1)
-        self._service2 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event2)
+        self._service1 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, fixedTax=1, dynamicTax=1, totalValue=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event1)
+        self._service2 = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, fixedTax=1, dynamicTax=1, totalValue=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event2)
 
     def testUrl(self):
         self.client.get('/testLogin/user2')
@@ -296,7 +296,7 @@ class TestServicesForm():
         self.event.save()
 
     def testAddEventServiceForm(self):
-        objService = {"itemDescription": "Iphone 12", "quantity": 1, "productStatus": "Tudo certo", "problemDescription": "Sem problemas", "itemValue": 10000, "impost": 1, "dynamicRate": 1, "amount": 1, "address":"Quadra 61", "requestDate": datetime.date(2021, 3, 17), "orderPlacementDate": datetime.date(2021, 3, 29), "deliveryDate": datetime.date(2021, 3, 30), "taxation": False, "clientUser": self.client, "event":self.event}
+        objService = {"itemDescription": "Iphone 12", "quantity": 1, "productStatus": "Tudo certo", "problemDescription": "Sem problemas", "itemValue": 10000, "fixedTax": 1, "dynamicTax": 1, "totalValue": 1, "address":"Quadra 61", "requestDate": datetime.date(2021, 3, 17), "orderPlacementDate": datetime.date(2021, 3, 29), "deliveryDate": datetime.date(2021, 3, 30), "taxation": False, "clientUser": self.client, "event":self.event}
         form = ServiceForm(objService)
         self.assertFalse(form.is_valid())
 
@@ -308,7 +308,7 @@ class TestFeedback(TestCase):
         self._event.save()
         self._user = ClientUser(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="user1", password="user1")
         self._user.save()
-        self._service = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event)
+        self._service = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, fixedTax=1, dynamicTax=1, totalValue=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event)
         self._service.save()
 
     def testUrl(self):
@@ -377,7 +377,7 @@ class TestServicePermissions(TestCase):
         self._client = ClientUser.objects.create(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="client")
         self._client.save()
 
-        self._service = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._client, event=self._event)
+        self._service = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, fixedTax=1, dynamicTax=1, totalValue=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._client, event=self._event)
         self._service.save()
     
     def testPartnerUserAtEditServicePage(self):
@@ -421,6 +421,12 @@ class TestServicePermissions(TestCase):
         self.client.get('/testLogin/client')
         response = self.client.get('/user/partner/list_services/')
         self.assertEqual(response.status_code, 404)
+    
+    def testPartnerUserAtLisClienttServicesPage(self):
+        self.client.get('/testLogin/partner')
+        response = self.client.get('/user/client/list_services/')
+        self.assertEqual(response.status_code, 404)
+
 
 class TestEventPermissions(TestCase):
     def setUp(self):
@@ -473,3 +479,4 @@ class TestEventPermissions(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "registration/login.html")
     
+

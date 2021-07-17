@@ -44,8 +44,8 @@ class ModelField:
         return models.ForeignKey(model, on_delete=models.CASCADE, default=None)
     
     @staticmethod
-    def createFloatField(label):
-        return models.FloatField(label, default = 0)
+    def createFloatField(label, default=0):
+        return models.FloatField(label, default = default)
 
     @staticmethod
     def createTextField(label):

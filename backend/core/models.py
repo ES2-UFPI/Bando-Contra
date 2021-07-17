@@ -70,9 +70,9 @@ class Service(models.Model):
     productStatus = ModelField.createCharField("Product Status", 100, choices=statusChoices)
     problemDescription = ModelField.createTextField("Problem Description")
     itemValue = ModelField.createFloatField("Item Value")
-    impost = ModelField.createFloatField("Impost") #fixedTax
-    dynamicRate = ModelField.createFloatField("Dynamic Rate") #dynamicTax
-    amount = ModelField.createFloatField("Amount") #totalValue
+    fixedTax = ModelField.createFloatField("fixed Tax", 10) 
+    dynamicTax = ModelField.createFloatField("Dynamic Tax") 
+    totalValue = ModelField.createFloatField("Total Value") 
     address = ModelField.createCharField("Address", 100)
     requestDate = ModelField.createDateField("Request Date")
     orderPlacementDate = ModelField.createDateField("Order Placement Date")
