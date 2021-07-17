@@ -6,16 +6,6 @@ from .storage import OverwriteStorage
 from django import forms
 from django.http import HttpResponse, Http404
 
-STATUS_MSG = (
-    ("Order placed" , "Order placed"),
-    ("order on the way" , "order on the way"),
-    ("Order Delivered", "Order Delivered"),
-    ("Request under Analysis", "Request under Analysis"),
-    ("Taxed order", "Taxed order"),
-    ("address not found", "address not found"),
-    ("Problems in sending", "Problems in sending")
-)
-
 STORAGE=OverwriteStorage(location="_private/users/documents")
 
 class ModelField:
@@ -34,12 +24,12 @@ class ModelField:
         return models.FileField("Document", storage=STORAGE)
 
     @staticmethod
-    def createCharField(label, max_length, choice=[], null=False):
+    def createCharField(label, max_length, choices=[], null=False):
 
-        if choice.__len__() == 0:
+        if choices.__len__() == 0:
             return models.CharField(label, max_length = max_length, default = None, null=True)
         else:
-            return models.CharField(label, max_length = max_length, choices=opc, null=True)
+            return models.CharField(label, max_length = max_length, choices=choices, null=True)
     
     @staticmethod
     def createIntergerField(label):
@@ -96,6 +86,14 @@ class FormFacade:
     @staticmethod
     def createIntegerField():
         return forms.IntegerField() 
+
+    @staticmethod
+    def createChoiceField(choices, required=True):
+        return forms.ChoiceField(choices=choices, required=required)
+
+    @staticmethod
+    def createTextArea(placeholder, label):
+        return forms.CharField(widget = Textarea(attrs = {"placeholder": placeholder}), label = label)
 
 class HttpFacade:
     @staticmethod

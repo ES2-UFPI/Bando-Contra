@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import ClientUser, PartnerUser, Event, Service
 from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator, pairEvent
-from .forms import ClientUserForm, PartnerUserForm, EventForm, ServiceForm, ClientFeedbackForm
+from .forms import ClientUserForm, PartnerUserForm, EventForm, ServiceForm, ClientFeedbackForm, LimitedServiceForm
 from .facade import UserFacade, ShortcutsFacade, ModelFacade, HttpFacade
 from datetime import date
 from django.forms.widgets import HiddenInput
@@ -94,21 +94,31 @@ def addService(request):
     
     return ShortcutsFacade.callRender(request, "core/user/client/addService.html", data)
 
+@login_required
 def editService(request, pk):
+    partner = UserFacade.getUser(PartnerUser, username = request.user.username)
     service = ModelFacade.getModel(Service, id = pk)
 
+    if service.event.partner != partner:
+        HttpFacade.error404()
+
     if request.method == 'POST':
-        form = ServiceForm(request.POST, instance = service)
+        form = LimitedServiceForm(request.POST, instance = service)
         if form.is_valid():
-            service.save()
+            form.save(commit=True)
             return ShortcutsFacade.callRedirect("detailService", pk = service.id)
     else:
-        form = ServiceForm(instance = service)
+        form = LimitedServiceForm(instance = service)
     data = {'title':'Edit Service', 'form': form}
-    return ShortcutsFacade.callRender(request, "core/user/client/addService.html", data)
-    
+    return ShortcutsFacade.callRender(request, "core/user/partner/editService.html", data)
+
+@login_required 
 def detailService(request, pk):
     service = Service.objects.get(id = pk)
+
+    if service.clientUser.username != request.user.username and service.event.partner.username != request.user.username:
+        HttpFacade.error404()
+
     data = {
         "service": service,
     }
@@ -143,6 +153,7 @@ def listClientServices(request):
     context = UserContext(user)
     return context.listServicesView(request)
 
+@login_required
 def listPartnerServices(request):
     user = UserFacade.getUser(PartnerUser, request.user.username)
     context = UserContext(user)

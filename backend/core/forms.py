@@ -103,8 +103,6 @@ class ServiceForm(ModelForm):
         if date is None or dateEvent.arrival <= datetime.date.today():
             raise ValidationError("ERROR")
 
-
-
     class Meta:
         model = Service
         fields = "__all__"
@@ -120,6 +118,11 @@ class ServiceForm(ModelForm):
             'orderPlacementDate': ('%Y-%m-%d',),
             'deliveryDate': ('%Y-%m-%d',)
         }
+
+class LimitedServiceForm(ModelForm):
+    class Meta:
+        model = Service
+        fields = ['productStatus', 'problemDescription', 'taxation']
 
 class ClientFeedbackForm(Form):
     feedback = CharField(widget = Textarea(attrs = {"placeholder": 'Write your feedback about the service here'}), label = '')
