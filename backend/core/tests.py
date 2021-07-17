@@ -304,3 +304,41 @@ class TestFeedback(TestCase):
         editedService = Service.objects.get(id = pk)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(editedService.clientFeedback, 'very good!')
+
+class TestParterInfoPermissions(TestCase):
+    def setUp(self):
+        partnerUser = PartnerUser(username = 'partner', nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!')
+        partnerUser.save()
+        user = ClientUser.objects.create(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="client")
+        user.save()
+    
+    def testPartnerUserAtDetailPage(self):
+        self.client.get('/testLogin/partner')
+        response = self.client.get('/user/partner/detail')
+        self.assertEqual(response.status_code, 200)
+
+    def testAnnonymousUserAtDetailPage(self):
+        response = self.client.get('/user/partner/detail', follow = True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "registration/login.html")
+    
+    def testClientUserAtDetailPage(self):
+        self.client.get('/testLogin/client')
+        response = self.client.get('/user/partner/detail')
+        self.assertEqual(response.status_code, 404)
+    
+    def testPartnerUserAtEditPage(self):
+        self.client.get('/testLogin/partner')
+        response = self.client.get('/user/partner/edit_profile')
+        self.assertEqual(response.status_code, 200)
+
+    def testAnonymousUserAtEditPage(self):
+        response = self.client.get('/user/partner/edit_profile', follow = True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "registration/login.html")
+    
+    def testClientUserAtEditPage(self):
+        self.client.get('/testLogin/client')
+        response = self.client.get('/user/partner/edit_profile')
+        self.assertEqual(response.status_code, 404)
+    

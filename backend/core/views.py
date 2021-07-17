@@ -1,5 +1,6 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from .models import ClientUser, PartnerUser, Event, Service
 from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator, pairEvent
 from .forms import ClientUserForm, PartnerUserForm, EventForm, ServiceForm, ClientFeedbackForm
@@ -11,6 +12,7 @@ def detailClient(request):
     context = UserContext(user)
     return context.detailView(request)
 
+@login_required
 def detailPartner(request):
     user = UserFacade.getUser(PartnerUser, request.user.username)
     context = UserContext(user)
@@ -18,14 +20,13 @@ def detailPartner(request):
     return context.detailView(request, assessment)
 
 def temporaryLogin(request):
-    user = User.objects.get(username='user1')
+    user = User.objects.get(username='partner1')
     login(request, user)
     return ShortcutsFacade.callRender(request, "core/user/client/detail.html")
 
 def testLogin(request, username):
     user = User.objects.get(username=username)
     login(request, user)
-
     return HttpFacade.response()
 
 def addClient(request):
@@ -41,6 +42,7 @@ def addPartner(request):
     creator = PartnerCreator()
     return creator.addUser(request, "sign up")
 
+@login_required
 def editPartner(request):
     user = UserFacade.getUser(PartnerUser, request.user.username)
     context = UserContext(user, PartnerUserForm)
