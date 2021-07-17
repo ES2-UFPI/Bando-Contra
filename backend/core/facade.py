@@ -92,6 +92,10 @@ class FormFacade:
     @staticmethod
     def phoneInput():
         return forms.TextInput(attrs = {'type': 'tel'})
+    
+    @staticmethod
+    def createIntegerField():
+        return forms.IntegerField() 
 
 class HttpFacade:
     @staticmethod

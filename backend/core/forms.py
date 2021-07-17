@@ -1,8 +1,10 @@
 from django.forms import ModelForm, Form, Textarea, CharField
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from django.forms.forms import Form
 from .models import ClientUser, PartnerUser, Event, Service
 from .facade import FormFacade
+import datetime
 
 def binarySearch(array, value):
     start = 0
@@ -90,6 +92,19 @@ class EventForm(ModelForm):
                 raise ValidationError("Already exists a Event in this date")
 
 class ServiceForm(ModelForm):
+
+    eventAdd = FormFacade.createIntegerField()
+
+    def clean(self):
+        cleanedData = super().clean()
+        date = cleanedData.get("eventAdd")
+        dateEvent = Event.objects.get(id=date)
+
+        if date is None or dateEvent.arrival <= datetime.date.today():
+            raise ValidationError("ERROR")
+
+
+
     class Meta:
         model = Service
         fields = "__all__"

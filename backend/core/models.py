@@ -46,8 +46,8 @@ class PartnerUser (User):
 
 class Event(models.Model):
     address = ModelField.createCharField("Address", 100)
-    arrival = ModelField.createDateField("Arrival Date")
-    departure = ModelField.createDateField("Departure Date")
+    arrival = ModelField.createDateField("Arrival Date") # Vai chegar lá
+    departure = ModelField.createDateField("Departure Date") # Vai sair de lá
     partner = ModelField.createForeignKey(PartnerUser)
     
     class Meta:
