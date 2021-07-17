@@ -5,8 +5,10 @@ from .models import ClientUser, PartnerUser, Event, Service
 from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator, pairEvent
 from .forms import ClientUserForm, PartnerUserForm, EventForm, ServiceForm, ClientFeedbackForm, LimitedServiceForm
 from .facade import UserFacade, ShortcutsFacade, ModelFacade, HttpFacade
-from datetime import date
+from datetime import date, timedelta
 from django.forms.widgets import HiddenInput
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
 
 def detailClient(request):
     user = UserFacade.getUser(ClientUser, request.user.username)
@@ -21,7 +23,7 @@ def detailPartner(request):
     return context.detailView(request, assessment)
 
 def temporaryLogin(request):
-    user = User.objects.get(username='partner1')
+    user = User.objects.get(username='fjair5')
     login(request, user)
     return ShortcutsFacade.callRender(request, "core/user/client/detail.html")
 
@@ -72,7 +74,10 @@ def addEvent(request):
     data = {'title': 'Add Schedule Event', 'form': form}
     return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)
 
+@login_required
 def addService(request):
+    client = UserFacade.getUser(ClientUser, username = request.user.username)
+    
 
     listEvents = Event.objects.filter(arrival__gte=date.today())
 
@@ -82,6 +87,10 @@ def addService(request):
             service = form.save(commit=False)
             user = UserFacade.getUser(ClientUser, request.user.username)
             service.clientUser = user
+            service.requestDate = date.today()
+            service.deliveryDate = date.today() + timedelta(days=30)
+            service.dynamicTax = 0.1 * service.itemValue
+            service.totalValue = service.dynamicTax + service.itemValue + service.fixedTax
             service.event = Event.objects.get(id=form.cleaned_data["eventAdd"])
             service.save()
             return ShortcutsFacade.callRedirect("detailService", pk = service.id)
@@ -148,6 +157,7 @@ def deleteEvent(request, pk):
 
     return HttpFacade.response()
 
+@login_required
 def listClientServices(request):
     user = UserFacade.getUser(ClientUser, request.user.username)
     context = UserContext(user)

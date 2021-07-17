@@ -106,17 +106,13 @@ class ServiceForm(ModelForm):
     class Meta:
         model = Service
         fields = "__all__"
-        exclude = ('clientUser', 'event', 'clientFeedback')
+        exclude = ('clientUser', 'event', 'clientFeedback', 'productStatus', 'problemDescription', 'fixedTax', 'dynamicTax', 'requestDate', 'deliveryDate', 'taxation', 'totalValue')
         widgets = {
-            'requestDate': FormFacade.dateInput(),
             'orderPlacementDate': FormFacade.dateInput(),
-            'deliveryDate': FormFacade.dateInput()
         }
         
         input_formats = {
-            'requestDate': ('%Y-%m-%d',),
             'orderPlacementDate': ('%Y-%m-%d',),
-            'deliveryDate': ('%Y-%m-%d',)
         }
 
 class LimitedServiceForm(ModelForm):
