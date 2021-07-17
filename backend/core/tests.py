@@ -275,3 +275,32 @@ class TestAuthentication(TestCase):
         response = self.client.get('/accounts/logout/')
         if response.wsgi_request.user.id != None:
             self.fail("User is logged in")
+
+class TestFeedback(TestCase):
+    def setUp(self):
+        self._partnerUser = PartnerUser(nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!')
+        self._partnerUser.save()
+        self._event = Event(address = 'rua 10 casa 20', arrival = datetime.date(2021, 3, 17), departure = datetime.date(2021, 3, 17),partner = self._partnerUser)
+        self._event.save()
+        self._user = ClientUser(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="user1", password="user1")
+        self._user.save()
+        self._service = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event)
+        self._service.save()
+
+    def testUrl(self):
+        pk = self._service.id
+        response = self.client.get('/user/client/feedback/{}'.format(pk))
+        self.assertEqual(response.status_code, 200)
+    
+    def testCorrectTemplates(self):
+        pk = self._service.id
+        response = self.client.get('/user/client/feedback/{}'.format(pk))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'core/user/client/feedback.html')
+    
+    def testAddFeedback(self):
+        pk = self._service.id
+        response = self.client.post('/user/client/feedback/{}'.format(pk), {'feedback': 'very good!'})
+        editedService = Service.objects.get(id = pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(editedService.clientFeedback, 'very good!')

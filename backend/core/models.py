@@ -70,3 +70,5 @@ class Service(models.Model):
     taxation = ModelField.createBooleanField("Taxation")
     clientUser = ModelField.createForeignKey(ClientUser)
     event = ModelField.createForeignKey(Event)
+    clientFeedback = ModelField.createTextField("Feedback")
+    

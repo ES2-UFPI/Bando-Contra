@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, Form, Textarea, CharField
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from .models import ClientUser, PartnerUser, Event, Service
@@ -89,13 +89,11 @@ class EventForm(ModelForm):
             if floor != ceeling:
                 raise ValidationError("Already exists a Event in this date")
 
-
-
 class ServiceForm(ModelForm):
     class Meta:
         model = Service
         fields = "__all__"
-        exclude = ('clientUser', 'event')
+        exclude = ('clientUser', 'event', 'clientFeedback')
         widgets = {
             'requestDate': FormFacade.dateInput(),
             'orderPlacementDate': FormFacade.dateInput(),
@@ -107,4 +105,7 @@ class ServiceForm(ModelForm):
             'orderPlacementDate': ('%Y-%m-%d',),
             'deliveryDate': ('%Y-%m-%d',)
         }
-        
+
+class ClientFeedbackForm(Form):
+    feedback = CharField(widget = Textarea(attrs = {"placeholder": 'Write your feedback about the service here'}), label = '')
+    
