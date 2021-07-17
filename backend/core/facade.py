@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from .storage import OverwriteStorage
 from django import forms
 from django.http import HttpResponse, Http404
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 STORAGE=OverwriteStorage(location="_private/users/documents")
 
@@ -88,12 +89,16 @@ class FormFacade:
         return forms.IntegerField() 
 
     @staticmethod
+    def createIntegerRangeField(max, min):
+        return forms.IntegerField(validators=[MaxValueValidator(max), MinValueValidator(min)])
+
+    @staticmethod
     def createChoiceField(choices, required=True):
         return forms.ChoiceField(choices=choices, required=required)
 
     @staticmethod
-    def createTextArea(placeholder, label):
-        return forms.CharField(widget = Textarea(attrs = {"placeholder": placeholder}), label = label)
+    def createTextArea(placeholder, label, required=False):
+        return forms.CharField(widget = forms.Textarea(attrs = {"placeholder": placeholder}), label = label, required=required)
 
 class HttpFacade:
     @staticmethod
