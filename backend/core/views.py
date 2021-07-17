@@ -5,6 +5,7 @@ from .utils import UserContext, ShortcutsFacade, ClientCreator, PartnerCreator, 
 from .forms import ClientUserForm, PartnerUserForm, EventForm, ServiceForm
 from .facade import UserFacade, ShortcutsFacade, ModelFacade, HttpFacade
 from datetime import date
+from django.forms.widgets import HiddenInput
 
 def detailClient(request):
     user = UserFacade.getUser(ClientUser, request.user.username)
@@ -18,7 +19,7 @@ def detailPartner(request):
     return context.detailView(request, assessment)
 
 def temporaryLogin(request):
-    user = User.objects.get(username='user1')
+    user = User.objects.get(username='fjairP')
     login(request, user)
     return ShortcutsFacade.callRender(request, "core/user/client/detail.html")
 
@@ -70,18 +71,25 @@ def addEvent(request):
     return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)
 
 def addService(request):
+
+    listEvents = Event.objects.filter(arrival__gte=date.today())
+
     if request.method == 'POST':
         form = ServiceForm(request.POST)
         if form.is_valid():
             service = form.save(commit=False)
             user = UserFacade.getUser(ClientUser, request.user.username)
             service.clientUser = user
-            service.event = pairEvent(service.orderPlacementDate) #TODO Check if this is the correct date to filter
+            service.event = Event.objects.get(id=form.cleaned_data["eventAdd"])
             service.save()
             return ShortcutsFacade.callRedirect("detailService", pk = service.id)
     else:
         form = ServiceForm()
-    data = {'title':'Add Service', 'form': form}
+    
+    form.fields["eventAdd"].widget = HiddenInput()
+    
+    data = {'title':'Add Service', 'form': form, 'listEvents': listEvents}
+    
     return ShortcutsFacade.callRender(request, "core/user/client/addService.html", data)
 
 def editService(request, pk):
