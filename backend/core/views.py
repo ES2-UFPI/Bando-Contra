@@ -49,6 +49,7 @@ def editPartner(request):
     context = UserContext(user, PartnerUserForm)
     return context.editView(request)
 
+@login_required
 def detailSchedule(request):
     user = UserFacade.getUser(PartnerUser, request.user.username)
     schedule = Event.objects.filter(partner = user)
@@ -58,12 +59,15 @@ def detailSchedule(request):
     }
     return ShortcutsFacade.callRender(request, "core/user/partner/schedule.html", data) 
 
+@login_required
 def addEvent(request):
+    partner = UserFacade.getUser(PartnerUser, username = request.user.username)
+    
     if request.method == 'POST':
-        form = EventForm(request.POST, partnerUsername = request.user.username)
+        form = EventForm(request.POST, partnerUsername = partner.username)
         if form.is_valid():
             event = form.save(commit = False)
-            user = UserFacade.getUser(PartnerUser, request.user.username)
+            user = UserFacade.getUser(PartnerUser, partner.username)
             event.partner = user
             event.save()
             return ShortcutsFacade.callRedirect("detailSchedule")
@@ -125,10 +129,16 @@ def detailService(request, pk):
     
     return ShortcutsFacade.callRender(request, "core/user/service.html", data) 
 
+@login_required
 def editEvent(request, pk):
+    partner = UserFacade.getUser(PartnerUser, username = request.user.username)
     event = ModelFacade.getModel(Event, id = pk)
+
+    if event.partner != partner:
+        HttpFacade.error404()
+
     if request.method == 'POST':
-        form = EventForm(request.POST, instance = event, partnerUsername = request.user.username)
+        form = EventForm(request.POST, instance = event, partnerUsername = partner.username)
         if form.is_valid():
             form.save()
             return ShortcutsFacade.callRedirect("detailSchedule")
@@ -137,6 +147,7 @@ def editEvent(request, pk):
     data = {'title': 'Edit Schedule Event', 'form': form}
     return ShortcutsFacade.callRender(request, "core/user/partner/addEvent.html", data)
 
+@login_required
 def deleteEvent(request, pk):
     event = ModelFacade.getModel(Event, id=pk)
 
