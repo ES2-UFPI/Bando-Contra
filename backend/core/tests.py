@@ -7,7 +7,6 @@ from .forms import ClientUserForm, PartnerUserForm, EventForm, binarySearch, Ser
 
 #python manage.py test backend.core.tests
 
-
 class TesteClientUserModel(TestCase):
     
     def setUp(self):
@@ -24,23 +23,26 @@ class TesteClientUserModel(TestCase):
 
 class TestEditEventView(TestCase):
     def setUp(self):
-        self.partnerUser = PartnerUser(nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!')
+        self.partnerUser = PartnerUser(nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!', username='partner')
         self.partnerUser.save()
         self.event = Event(address = 'rua 10 casa 20', arrival = datetime.date(2021, 3, 17), departure = datetime.date(2021, 3, 17),partner = self.partnerUser)
         self.event.save()
 
     def testUrl(self):
+        self.client.get('/testLogin/partner')
         pk = self.event.id
         response = self.client.get('/user/partner/edit_event/{}'.format(pk))
         self.assertEqual(response.status_code, 200)
     
     def testCorrectTemplates(self):
+        self.client.get('/testLogin/partner')
         pk = self.event.id
         response = self.client.get('/user/partner/edit_event/{}'.format(pk))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'core/user/partner/addEvent.html')
     
     def testEditEvent(self):
+        self.client.get('/testLogin/partner')
         pk = self.event.id
         response = self.client.post('/user/partner/edit_event/{}'.format(pk), {'address':'rua 11 casa 21', 'arrival':self.event.arrival, 'departure':self.event.departure})
         editedEvent = Event.objects.get(id = pk)
@@ -52,23 +54,26 @@ class TestEditEventView(TestCase):
 
 class TestDeleteEventView(TestCase):
     def setUp(self):
-        self.partnerUser = PartnerUser(nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!')
+        self.partnerUser = PartnerUser(nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!', username='partner')
         self.partnerUser.save()
         self.event = Event(address = 'rua 10 casa 20', arrival = datetime.date(2021, 3, 17), departure = datetime.date(2021, 2, 17),partner = self.partnerUser)
         self.event.save()
 
     def testUrl(self):
+        self.client.get('/testLogin/partner')
         pk = self.event.id
         response = self.client.get('/user/partner/edit_event/{}'.format(pk))
         self.assertEqual(response.status_code, 200)
 
     def testCorrectTemplates(self):
+        self.client.get('/testLogin/partner')
         pk = self.event.id
         response = self.client.get('/user/partner/edit_event/{}'.format(pk))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'core/user/partner/addEvent.html')
 
     def testDeleteEvent(self):
+        self.client.get('/testLogin/partner')
         pk = self.event.id
         response = self.client.get('/user/partner/delete_event/{}'.format(pk))
         self.assertEqual(response.status_code, 200)
@@ -79,6 +84,7 @@ class TestDeleteEventView(TestCase):
             pass
 
     def testNotFound(self):
+        self.client.get('/testLogin/partner')
         response = self.client.get('/user/partner/edit_event/{}'.format(2))
         self.assertEqual(response.status_code, 404)
 
@@ -335,7 +341,7 @@ class TestParterInfoPermissions(TestCase):
         response = self.client.get('/user/partner/detail')
         self.assertEqual(response.status_code, 200)
 
-    def testAnnonymousUserAtDetailPage(self):
+    def testAnonymousUserAtDetailPage(self):
         response = self.client.get('/user/partner/detail', follow = True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "registration/login.html")
@@ -379,7 +385,7 @@ class TestServicePermissions(TestCase):
         response = self.client.get('/user/partner/edit_service/{}'.format(self._service.id))
         self.assertEqual(response.status_code, 200)
     
-    def testAnnonymousUserAtEditServicePage(self):
+    def testAnonymousUserAtEditServicePage(self):
         response = self.client.get('/user/partner/edit_service/{}'.format(self._service.id))
         self.assertEqual(response.status_code, 302)
         
@@ -393,7 +399,7 @@ class TestServicePermissions(TestCase):
         response = self.client.get('/user/detail_service/{}'.format(self._service.id))
         self.assertEqual(response.status_code, 200)
     
-    def testAnnonymousUserAtDetailServicePage(self):
+    def testAnonymousUserAtDetailServicePage(self):
         response = self.client.get('/user/detail_service/{}'.format(self._service.id))
         self.assertEqual(response.status_code, 302)
         
@@ -407,7 +413,7 @@ class TestServicePermissions(TestCase):
         response = self.client.get('/user/partner/list_services/')
         self.assertEqual(response.status_code, 200)
     
-    def testAnnonymousUserAtListPartnerServicesePage(self):
+    def testAnonymousUserAtListPartnerServicesePage(self):
         response = self.client.get('/user/partner/list_services/')
         self.assertEqual(response.status_code, 302)
         
@@ -420,3 +426,57 @@ class TestServicePermissions(TestCase):
         self.client.get('/testLogin/partner')
         response = self.client.get('/user/client/list_services/')
         self.assertEqual(response.status_code, 404)
+
+
+class TestEventPermissions(TestCase):
+    def setUp(self):
+        self._partnerUser = PartnerUser(username = 'partner', nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!')
+        self._partnerUser.save()
+
+        self._event = Event(address = 'test1', arrival = datetime.date(2021, 3, 17), departure = datetime.date(2021, 2, 17),partner = self._partnerUser)
+        self._event.save()
+
+        self._client = ClientUser.objects.create(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="client")
+        self._client.save()
+    
+    def testPartnerUserAtDetailSchedulePage(self):
+        self.client.get('/testLogin/partner')
+        response = self.client.get('/user/partner/schedule')
+        self.assertEqual(response.status_code, 200)
+    
+    def testAnonymousUserAtDetailSchedulePage(self):
+        response = self.client.get('/user/partner/schedule', follow = True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "registration/login.html")
+
+    def testPartnerUserAtAddEventPage(self):
+        self.client.get('/testLogin/partner')
+        response = self.client.get('/user/partner/add_event')
+        self.assertEqual(response.status_code, 200)
+    
+    def testAnonymousUserAtAddEventPage(self):
+        response = self.client.get('/user/partner/add_event', follow = True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "registration/login.html")
+
+    def testPartnerUserAtEditEventPage(self):
+        self.client.get('/testLogin/partner')
+        response = self.client.get('/user/partner/edit_event/{}'.format(self._event.id))
+        self.assertEqual(response.status_code, 200)
+    
+    def testAnonymousUserAtEditEventPage(self):
+        response = self.client.get('/user/partner/edit_event/{}'.format(self._event.id), follow = True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "registration/login.html")
+
+    def testPartnerUserAtDeleteEventPage(self):
+        self.client.get('/testLogin/partner')
+        response = self.client.get('/user/partner/delete_event/{}'.format(self._event.id))
+        self.assertEqual(response.status_code, 200)
+    
+    def testAnonymousUserAtEDeleteEventPage(self):
+        response = self.client.get('/user/partner/delete_event/{}'.format(self._event.id), follow = True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "registration/login.html")
+    
+
