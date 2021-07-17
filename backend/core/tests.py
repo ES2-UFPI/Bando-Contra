@@ -134,7 +134,7 @@ class TestListPartnerServices(TestCase):
 
     def testNotFound(self):
         response = self.client.get('/user/partner/list_services/')
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 302)
 
 class TestSearchModule(TestCase):
     def testAverageCase(self):
@@ -275,8 +275,7 @@ class TestAuthentication(TestCase):
         self.client.get('/testLogin/user1')
         response = self.client.get('/accounts/logout/')
         if response.wsgi_request.user.id != None:
-            self.fail("User is logged in")
-        
+            self.fail("User is logged in")      
 
 class TestServicesForm():
     
@@ -294,7 +293,6 @@ class TestServicesForm():
         objService = {"itemDescription": "Iphone 12", "quantity": 1, "productStatus": "Tudo certo", "problemDescription": "Sem problemas", "itemValue": 10000, "impost": 1, "dynamicRate": 1, "amount": 1, "address":"Quadra 61", "requestDate": datetime.date(2021, 3, 17), "orderPlacementDate": datetime.date(2021, 3, 29), "deliveryDate": datetime.date(2021, 3, 30), "taxation": False, "clientUser": self.client, "event":self.event}
         form = ServiceForm(objService)
         self.assertFalse(form.is_valid())
-
 
 class TestFeedback(TestCase):
     def setUp(self):
@@ -361,4 +359,59 @@ class TestParterInfoPermissions(TestCase):
         self.client.get('/testLogin/client')
         response = self.client.get('/user/partner/edit_profile')
         self.assertEqual(response.status_code, 404)
+
+class TestServicePermissions(TestCase):
+    def setUp(self):
+        self._partnerUser = PartnerUser(username = 'partner', nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!')
+        self._partnerUser.save()
+
+        self._event = Event(address = 'test1', arrival = datetime.date(2021, 3, 17), departure = datetime.date(2021, 2, 17),partner = self._partnerUser)
+        self._event.save()
+
+        self._client = ClientUser.objects.create(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="client")
+        self._client.save()
+
+        self._service = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, impost=1, dynamicRate=1, amount=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._client, event=self._event)
+        self._service.save()
     
+    def testPartnerUserAtEditServicePage(self):
+        self.client.get('/testLogin/partner')
+        response = self.client.get('/user/partner/edit_service/{}'.format(self._service.id))
+        self.assertEqual(response.status_code, 200)
+    
+    def testAnnonymousUserAtEditServicePage(self):
+        response = self.client.get('/user/partner/edit_service/{}'.format(self._service.id))
+        self.assertEqual(response.status_code, 302)
+        
+    def testClientUserAtEditServicePage(self):
+        self.client.get('/testLogin/client')
+        response = self.client.get('/user/partner/edit_service/{}'.format(self._service.id))
+        self.assertEqual(response.status_code, 404)
+    
+    def testPartnerUserAtDetailServicePage(self):
+        self.client.get('/testLogin/partner')
+        response = self.client.get('/user/detail_service/{}'.format(self._service.id))
+        self.assertEqual(response.status_code, 200)
+    
+    def testAnnonymousUserAtDetailServicePage(self):
+        response = self.client.get('/user/detail_service/{}'.format(self._service.id))
+        self.assertEqual(response.status_code, 302)
+        
+    def testClientUserAtDetailServicePage(self):
+        self.client.get('/testLogin/client')
+        response = self.client.get('/user/detail_service/{}'.format(self._service.id))
+        self.assertEqual(response.status_code, 200)
+    
+    def testPartnerUserAtListPartnerServicesPage(self):
+        self.client.get('/testLogin/partner')
+        response = self.client.get('/user/partner/list_services/')
+        self.assertEqual(response.status_code, 200)
+    
+    def testAnnonymousUserAtListPartnerServicesePage(self):
+        response = self.client.get('/user/partner/list_services/')
+        self.assertEqual(response.status_code, 302)
+        
+    def testClientUserAtListPartnerServicesPage(self):
+        self.client.get('/testLogin/client')
+        response = self.client.get('/user/partner/list_services/')
+        self.assertEqual(response.status_code, 404)

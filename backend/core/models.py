@@ -55,18 +55,28 @@ class Event(models.Model):
         ordering = ['arrival']
 
 class Service(models.Model):
+    statusChoices = (
+        ("Order placed" , "Order placed"),
+        ("order on the way" , "order on the way"),
+        ("Order Delivered", "Order Delivered"),
+        ("Request under Analysis", "Request under Analysis"),
+        ("Taxed order", "Taxed order"),
+        ("address not found", "address not found"),
+        ("Problems in sending", "Problems in sending")
+    )
+
     itemDescription = ModelField.createCharField("Item Description", 300)
     quantity =  ModelField.createIntergerField("Quantity")
-    productStatus = ModelField.createCharField("Product Status", 100)
-    problemDescription = ModelField.createCharField("Problem Description", 200)
+    productStatus = ModelField.createCharField("Product Status", 100, choices=statusChoices)
+    problemDescription = ModelField.createTextField("Problem Description")
     itemValue = ModelField.createFloatField("Item Value")
-    impost = ModelField.createFloatField("Impost")
-    dynamicRate = ModelField.createFloatField("Dynamic Rate")
-    amount = ModelField.createFloatField("Amount")
+    impost = ModelField.createFloatField("Impost") #fixedTax
+    dynamicRate = ModelField.createFloatField("Dynamic Rate") #dynamicTax
+    amount = ModelField.createFloatField("Amount") #totalValue
     address = ModelField.createCharField("Address", 100)
     requestDate = ModelField.createDateField("Request Date")
     orderPlacementDate = ModelField.createDateField("Order Placement Date")
-    deliveryDate = ModelField.createDateField("Delivery Date")
+    deliveryDate = ModelField.createDateField("Delivery Date") 
     taxation = ModelField.createBooleanField("Taxation")
     clientUser = ModelField.createForeignKey(ClientUser)
     event = ModelField.createForeignKey(Event)
