@@ -35,6 +35,7 @@ def detailPartner(request):
     return context.detailView(request, assessment)
 
 def temporaryLogin(request):
+    #5
     user = User.objects.get(username='fjair89')
     login(request, user)
     return ShortcutsFacade.callRender(request, "core/user/client/detail.html")
@@ -192,11 +193,19 @@ def listPartnerServices(request):
     context = UserContext(user)
     return context.listServicesView(request)
 
+@login_required
 def feedback(request, pk):
     service = ModelFacade.getModel(Service, id = pk)
+    user = UserFacade.getUser(ClientUser, request.user.username)
+
+    if service.productStatus != "Order Delivered":
+        return ShortcutsFacade.callRedirect('listClientServices')
+
     if request.method == 'POST':
         form = ClientFeedbackForm(request.POST)
         if form.is_valid():
+            service.event.partner.assessmentSum += form.cleaned_data['evaluetion']
+            service.event.partner.assessmentCount += 1
             service.clientFeedback = form.cleaned_data['feedback']
             service.save()
             return ShortcutsFacade.callRedirect('listClientServices')

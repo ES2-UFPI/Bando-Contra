@@ -121,5 +121,7 @@ class LimitedServiceForm(ModelForm):
         fields = ['productStatus', 'problemDescription', 'taxation']
 
 class ClientFeedbackForm(Form):
-    feedback = CharField(widget = Textarea(attrs = {"placeholder": 'Write your feedback about the service here'}), label = '')
+    feedback = FormFacade.createTextArea('Write your feedback about the service here', '')
+    evaluetion = FormFacade.createIntegerRangeField(5, 0)
+
     
