@@ -480,5 +480,20 @@ class TestEventPermissions(TestCase):
         response = self.client.get('/user/partner/delete_event/{}'.format(self._event.id), follow = True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "registration/login.html")
+
+    def testClientUserAtAddEventPage(self):
+        self.client.get('/testLogin/client')
+        response = self.client.get('/user/partner/add_event')
+        self.assertEqual(response.status_code, 404)
+
+    def testClientUserAtEditEventPage(self):
+        self.client.get('/testLogin/client')
+        response = self.client.get('/user/partner/edit_event/{}'.format(self._event.id))
+        self.assertEqual(response.status_code, 404)
+
+    def testClientUserAtDeleteEventPage(self):
+        self.client.get('/testLogin/client')
+        response = self.client.get('/user/partner/delete_event/{}'.format(self._event.id))
+        self.assertEqual(response.status_code, 404)
     
 
