@@ -481,7 +481,7 @@ class TestEventPermissions(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "registration/login.html")
 
-        def testClientUserAtAddEventPage(self):
+    def testClientUserAtAddEventPage(self):
         self.client.get('/testLogin/client')
         response = self.client.get('/user/partner/add_event')
         self.assertEqual(response.status_code, 404)
