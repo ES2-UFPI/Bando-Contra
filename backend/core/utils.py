@@ -70,11 +70,9 @@ class UserCreator(ABC):
     def addUser(self, request, title):
         
         if request.method == "POST":
-            user = self.factoryMethod(request)
-            if user != None:
-                user.save()
+            form = self.factoryMethod(request)
+            if form is None:
                 return ShortcutsFacade.callRedirect("login")
-            form = ClientUserForm(request.POST)
         else:
             form = self.getForm()
         data = {'title':title, "form":form}
@@ -94,7 +92,9 @@ class ClientCreator(UserCreator):
     def factoryMethod(self, request ):
         form = ClientUserForm(request.POST)
         if form.is_valid():
-            return form.save(commit = False)
+            form.save()
+            return
+        return form
 
     def getForm(self):
         return ClientUserForm()
@@ -107,7 +107,9 @@ class PartnerCreator(UserCreator):
     def factoryMethod(self, request ):
         form = PartnerUserForm(request.POST)
         if form.is_valid():
-            return form.save(commit = False)
+            form.save()
+            return
+        return form
 
     def getForm(self):
         return PartnerUserForm()
