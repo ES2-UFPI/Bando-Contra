@@ -508,3 +508,8 @@ class TestClientInfoPermissions(TestCase):
         response = self.client.get('/user/client/detail')
         self.assertEqual(response.status_code, 200)
 
+    def testAnonymousUserAtDetailPage(self):
+        response = self.client.get('/user/client/detail', follow = True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "registration/login.html")
+    
