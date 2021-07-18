@@ -9,6 +9,7 @@ from datetime import date, timedelta
 from django.forms.widgets import HiddenInput
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
+from django.core.mail import send_mail
 
 @login_required
 def home(request):
@@ -199,6 +200,7 @@ def feedback(request, pk):
     user = UserFacade.getUser(ClientUser, request.user.username)
 
     if service.productStatus != "Order Delivered":
+        send_email(request)
         return ShortcutsFacade.callRedirect('listClientServices')
 
     if request.method == 'POST':
@@ -213,3 +215,7 @@ def feedback(request, pk):
         form = ClientFeedbackForm()
     data = {'title': 'Feedback', 'form': form}
     return ShortcutsFacade.callRender(request, 'core/user/client/feedback.html', data)
+
+@login_required
+def send_email(request):
+    send_mail('status', 'product status change', 'bando_contra@pardal.com', [request.user.email], fail_silently=False)
