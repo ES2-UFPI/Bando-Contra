@@ -523,3 +523,8 @@ class TestClientInfoPermissions(TestCase):
         response = self.client.get('/user/client/edit_profile')
         self.assertEqual(response.status_code, 200)
 
+    def testAnonymousUserAtEditPage(self):
+        response = self.client.get('/user/client/edit_profile', follow = True)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "registration/login.html")
+    
