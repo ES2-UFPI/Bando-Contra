@@ -495,5 +495,12 @@ class TestEventPermissions(TestCase):
         self.client.get('/testLogin/client')
         response = self.client.get('/user/partner/delete_event/{}'.format(self._event.id))
         self.assertEqual(response.status_code, 404)
-    
 
+class TestClientInfoPermissions(TestCase):
+    def setUp(self):
+        partnerUser = PartnerUser(username = 'partner', nationality = 'Belga', validation = True, phone = "(86)99959-6969", observation = 'ola mundo!')
+        partnerUser.save()
+        user = ClientUser.objects.create(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="client")
+        user.save()
+    
+    
