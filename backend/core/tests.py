@@ -518,4 +518,8 @@ class TestClientInfoPermissions(TestCase):
         response = self.client.get('/user/client/detail')
         self.assertEqual(response.status_code, 404)
     
-    
+    def testClientUserAtEditPage(self):
+        self.client.get('/testLogin/client')
+        response = self.client.get('/user/client/edit_profile')
+        self.assertEqual(response.status_code, 200)
+
