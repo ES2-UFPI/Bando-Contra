@@ -51,6 +51,7 @@ def addClient(request):
     creator = ClientCreator()
     return creator.addUser(request, "sign up")
 
+@login_required
 def editClient(request):
     user = UserFacade.getUser(ClientUser, request.user.username)
     context = UserContext(user, ClientUserForm)
