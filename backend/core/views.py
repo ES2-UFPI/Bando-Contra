@@ -23,6 +23,7 @@ def home(request):
     return ShortcutsFacade.callRedirect('detail_partner')
     
 
+@login_required
 def detailClient(request):
     user = UserFacade.getUser(ClientUser, request.user.username)
     context = UserContext(user)
