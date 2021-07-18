@@ -503,4 +503,8 @@ class TestClientInfoPermissions(TestCase):
         user = ClientUser.objects.create(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="client")
         user.save()
     
-    
+    def testClientUserAtDetailPage(self):
+        self.client.get('/testLogin/client')
+        response = self.client.get('/user/client/detail')
+        self.assertEqual(response.status_code, 200)
+
