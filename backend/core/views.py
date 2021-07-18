@@ -36,7 +36,7 @@ def detailPartner(request):
 
 def temporaryLogin(request):
     #5
-    user = User.objects.get(username='fjair89')
+    user = User.objects.get(username='partner1')
     login(request, user)
     return ShortcutsFacade.callRender(request, "core/user/client/detail.html")
 
@@ -204,7 +204,7 @@ def feedback(request, pk):
     if request.method == 'POST':
         form = ClientFeedbackForm(request.POST)
         if form.is_valid():
-            service.event.partner.assessmentSum += form.cleaned_data['evaluetion']
+            service.event.partner.assessmentSum += form.cleaned_data['evaluation']
             service.event.partner.assessmentCount += 1
             service.clientFeedback = form.cleaned_data['feedback']
             service.save()

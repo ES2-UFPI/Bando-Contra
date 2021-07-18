@@ -33,19 +33,19 @@
 
     {% for event in schedule %}
 
-        {% if event.arrival > today %}
+        {% if event.departure > today %}
         <div class="card mb-2 event not_done" id="event_{{ event.id }}_">
         {% else %}
         <div class="card mb-2 event done" id="event_{{ event.id }}_" hidden>
         {% endif %}
             <div class="card-header">
-                {{ event.departure }} - {{ event.arrival }}
+                {{ event.arrival }} - {{ event.departure }}
             </div>
             <div class="card-body">
                 <div class="card-title">
-                    {% if event.departure > today %}
+                    {% if event.arrival > today %}
                         <span class="badge bg-primary">Not started</span>
-                    {% elif event.arrival > today %}
+                    {% elif event.departure > today %}
                         <span class="badge bg-success">Current</span>
                     {% else %}
                         <span class="badge bg-secondary">Done</span>

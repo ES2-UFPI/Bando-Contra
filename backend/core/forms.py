@@ -122,6 +122,6 @@ class LimitedServiceForm(ModelForm):
 
 class ClientFeedbackForm(Form):
     feedback = FormFacade.createTextArea('Write your feedback about the service here', '')
-    evaluetion = FormFacade.createIntegerRangeField(5, 0)
+    evaluation = FormFacade.createIntegerRangeField(5, 0)
 
     
