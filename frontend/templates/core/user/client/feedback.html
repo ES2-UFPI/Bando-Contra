@@ -2,11 +2,12 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
+{% block title %}Feedback{% endblock %}
+
 {% block serviceLinks %}
          <a class="navbar-brand" href="{% url 'listClientServices' %}">Bando-Contra</a>
 {% endblock %}
 
-{% block title %}{{ title }}{% endblock %}
 
 {% block userType %}
 <a class="dropdown-item" href="{% url 'detail_client' %}">
