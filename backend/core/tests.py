@@ -528,3 +528,7 @@ class TestClientInfoPermissions(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "registration/login.html")
     
+    def testPartnerUserAtEditPage(self):
+        self.client.get('/testLogin/partner')
+        response = self.client.get('/user/client/edit_profile')
+        self.assertEqual(response.status_code, 404)
