@@ -308,23 +308,26 @@ class TestFeedback(TestCase):
         self._event.save()
         self._user = ClientUser(cpf="0123456", address="Quadra 61 - Teresina-PI", phone="(99)99999-9999", bornDate="2021-05-30", username="user1", password="user1")
         self._user.save()
-        self._service = Service(itemDescription="test", quantity=1, productStatus="status", problemDescription="test", itemValue=2.5, fixedTax=1, dynamicTax=1, totalValue=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event)
+        self._service = Service(itemDescription="test", quantity=1, productStatus="Order Delivered", problemDescription="test", itemValue=2.5, fixedTax=1, dynamicTax=1, totalValue=1, address="test", requestDate=datetime.date.today(), orderPlacementDate=datetime.date.today(), deliveryDate=datetime.date.today(), taxation=True, clientUser=self._user, event=self._event)
         self._service.save()
 
     def testUrl(self):
+        self.client.get('/testLogin/user1')
         pk = self._service.id
         response = self.client.get('/user/client/feedback/{}'.format(pk))
         self.assertEqual(response.status_code, 200)
     
     def testCorrectTemplates(self):
+        self.client.get('/testLogin/user1')
         pk = self._service.id
         response = self.client.get('/user/client/feedback/{}'.format(pk))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'core/user/client/feedback.html')
     
     def testAddFeedback(self):
+        self.client.get('/testLogin/user1')
         pk = self._service.id
-        response = self.client.post('/user/client/feedback/{}'.format(pk), {'feedback': 'very good!'})
+        response = self.client.post('/user/client/feedback/{}'.format(pk), {'feedback': 'very good!', 'evaluation': '5'})
         editedService = Service.objects.get(id = pk)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(editedService.clientFeedback, 'very good!')
@@ -426,7 +429,6 @@ class TestServicePermissions(TestCase):
         self.client.get('/testLogin/partner')
         response = self.client.get('/user/client/list_services/')
         self.assertEqual(response.status_code, 404)
-
 
 class TestEventPermissions(TestCase):
     def setUp(self):
