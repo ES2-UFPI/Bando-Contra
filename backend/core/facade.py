@@ -5,16 +5,7 @@ from django.contrib.auth.models import User
 from .storage import OverwriteStorage
 from django import forms
 from django.http import HttpResponse, Http404
-
-STATUS_MSG = (
-    ("Order placed" , "Order placed"),
-    ("order on the way" , "order on the way"),
-    ("Order Delivered", "Order Delivered"),
-    ("Request under Analysis", "Request under Analysis"),
-    ("Taxed order", "Taxed order"),
-    ("address not found", "address not found"),
-    ("Problems in sending", "Problems in sending")
-)
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 STORAGE=OverwriteStorage(location="_private/users/documents")
 
@@ -34,12 +25,12 @@ class ModelField:
         return models.FileField("Document", storage=STORAGE)
 
     @staticmethod
-    def createCharField(label, max_length, choice=[]):
+    def createCharField(label, max_length, choices=[], null=False):
 
-        if choice.__len__() == 0:
-            return models.CharField(label, max_length = max_length, default = None)
+        if choices.__len__() == 0:
+            return models.CharField(label, max_length = max_length, default = None, null=True)
         else:
-            return models.CharField(label, max_length = max_length, choices=opc)
+            return models.CharField(label, max_length = max_length, choices=choices, null=True)
     
     @staticmethod
     def createIntergerField(label):
@@ -54,8 +45,12 @@ class ModelField:
         return models.ForeignKey(model, on_delete=models.CASCADE, default=None)
     
     @staticmethod
-    def createFloatField(label):
-        return models.FloatField(label, default = 0)
+    def createFloatField(label, default=0):
+        return models.FloatField(label, default = default)
+
+    @staticmethod
+    def createTextField(label):
+        return models.TextField(label, default = None, null = True, blank = True)
 
 class ShortcutsFacade:
     @staticmethod
@@ -88,6 +83,22 @@ class FormFacade:
     @staticmethod
     def phoneInput():
         return forms.TextInput(attrs = {'type': 'tel'})
+    
+    @staticmethod
+    def createIntegerField():
+        return forms.IntegerField() 
+
+    @staticmethod
+    def createIntegerRangeField(max, min):
+        return forms.IntegerField(validators=[MaxValueValidator(max), MinValueValidator(min)])
+
+    @staticmethod
+    def createChoiceField(choices, required=True):
+        return forms.ChoiceField(choices=choices, required=required)
+
+    @staticmethod
+    def createTextArea(placeholder, label, required=False):
+        return forms.CharField(widget = forms.Textarea(attrs = {"placeholder": placeholder}), label = label, required=required)
 
 class HttpFacade:
     @staticmethod

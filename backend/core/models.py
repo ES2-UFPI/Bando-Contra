@@ -14,6 +14,9 @@ class ClientUser (User):
     phone = ModelField.createPhoneField()
     bornDate = ModelField.createDateField("Born Date")
 
+    def getServices(self):
+        return Service.objects.filter(clientUser=self)
+
     def getTemplatesLocation(self):
         return "core/user/client/"
 
@@ -29,9 +32,12 @@ class PartnerUser (User):
     validation = ModelField.createBooleanField("Validation")
     assessmentSum = ModelField.createIntergerField("Assessment Sum")
     assessmentCount = ModelField.createIntergerField("Assessment Count")
-    observation = ModelField.createCharField("Observation", 5000)
+    observation = ModelField.createCharField("Observation", 5000, null=True)
     phone = ModelField.createPhoneField()
     
+    def getServices(self):
+        return Service.objects.filter(event__partner=self)
+
     def getTemplatesLocation(self):
         return 'core/user/partner/'
     
@@ -40,27 +46,39 @@ class PartnerUser (User):
 
 class Event(models.Model):
     address = ModelField.createCharField("Address", 100)
-    arrival = ModelField.createDateField("Arrival Date")
-    departure = ModelField.createDateField("Departure Date")
+    arrival = ModelField.createDateField("Arrival Date") # Vai chegar lá
+    departure = ModelField.createDateField("Departure Date") # Vai sair de lá
     partner = ModelField.createForeignKey(PartnerUser)
     
     class Meta:
         verbose_name = "Event"
-        ordering = ['departure']
+        ordering = ['arrival']
 
 class Service(models.Model):
+    statusChoices = (
+        ("Order placed" , "Order placed"),
+        ("order on the way" , "order on the way"),
+        ("Order Delivered", "Order Delivered"),
+        ("Request under Analysis", "Request under Analysis"),
+        ("Taxed order", "Taxed order"),
+        ("address not found", "address not found"),
+        ("Problems in sending", "Problems in sending")
+    )
+
     itemDescription = ModelField.createCharField("Item Description", 300)
     quantity =  ModelField.createIntergerField("Quantity")
-    productStatus = ModelField.createCharField("Product Status", 100)
-    problemDescription = ModelField.createCharField("Problem Description", 200)
+    productStatus = ModelField.createCharField("Product Status", 100, choices=statusChoices)
+    problemDescription = ModelField.createTextField("Problem Description")
     itemValue = ModelField.createFloatField("Item Value")
-    impost = ModelField.createFloatField("Impost")
-    dynamicRate = ModelField.createFloatField("Dynamic Rate")
-    amount = ModelField.createFloatField("Amount")
+    fixedTax = ModelField.createFloatField("fixed Tax", 10) 
+    dynamicTax = ModelField.createFloatField("Dynamic Tax") 
+    totalValue = ModelField.createFloatField("Total Value") 
     address = ModelField.createCharField("Address", 100)
     requestDate = ModelField.createDateField("Request Date")
     orderPlacementDate = ModelField.createDateField("Order Placement Date")
-    deliveryDate = ModelField.createDateField("Delivery Date")
+    deliveryDate = ModelField.createDateField("Delivery Date") 
     taxation = ModelField.createBooleanField("Taxation")
     clientUser = ModelField.createForeignKey(ClientUser)
     event = ModelField.createForeignKey(Event)
+    clientFeedback = ModelField.createTextField("Feedback")
+    

@@ -1,6 +1,12 @@
 {% extends 'core/form.html' %}
 {% load static %}
 
+{% block title %}Add Service{% endblock %}
+
+{% block serviceLinks %}
+         <a class="navbar-brand" href="{% url 'listClientServices' %}">Bando-Contra</a>
+{% endblock %}
+
 {% block userType %}
 <a class="dropdown-item" href="{% url 'detail_client' %}">
     <div style="clear: left;">
@@ -12,4 +18,22 @@
         <p class="mb-0">Profile</p>
     </div>
 </a>
+{% endblock %}
+
+{% block formEvent %}
+
+<div class="mb-3">
+  <label for="eventID" class="form-label">Available Events</label>
+  <select id="eventID" class="form-select" name="eventAdd" required>
+    <option disabled selected value>Select Event</option>
+    {% for event in listEvents %}
+    <option value="{{ event.id }}" class="filterEvent" data-valueDate = "{{ event.arrival }}" hidden>{{ event.arrival }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/eventFilter.js' %}"></script>
 {% endblock %}

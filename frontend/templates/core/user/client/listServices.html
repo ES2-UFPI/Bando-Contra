@@ -1,0 +1,32 @@
+{% extends 'core/user/listServices.html' %}
+{% load static %}
+
+{% block title %}List Services{% endblock %}
+
+{% block userType %}
+<a class="dropdown-item" href="{% url 'detail_client' %}">
+    <div style="clear: left;">
+        <div style="float: left;" class="me-1">
+            <span class="material-icons-outlined">
+                account_circle
+            </span>
+        </div>
+        <p class="mb-0">Profile</p>
+    </div>
+</a>
+{% endblock %}
+
+{% block serviceLinks %}
+         <a class="navbar-brand" href="{% url 'listClientServices' %}">Bando-Contra</a>
+{% endblock %}
+
+
+{% block buttons %}
+
+{% if service.productStatus == 'Order Delivered' %}
+<a href="{% url 'feedback' service.id %}" class="btn btn-outline-primary">Feedback</a>
+{% endif %}
+
+{% endblock %}
+
+{% block addButton %}<a href="{% url 'addService' %}" class="btn btn-outline-primary">add</a>{% endblock %}

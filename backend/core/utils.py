@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from .forms import ClientUserForm, PartnerUserForm
 from .facade import ShortcutsFacade
-from .models import Event
+from .models import Event, Service
+from datetime import date
 
 def pairEvent(date):
     events = Event.objects.all()
@@ -9,7 +10,7 @@ def pairEvent(date):
     for event in events:
         if(event.arrival <= date and date <= event.departure):
             return event
-
+ 
 class UserContext:
     def __init__(self, user, userForm=None):
         self._user = user
@@ -53,6 +54,14 @@ class UserContext:
 
         return ShortcutsFacade.callRender(request, result, data)
 
+    def listServicesView(self, request):
+        result = self._user.getTemplatesLocation() + "listServices.html"
+        data = {
+            'services': self._user.getServices(),
+            'today': date.today()
+            }
+        return ShortcutsFacade.callRender(request, result, data)
+
 class UserCreator(ABC):
     @abstractmethod
     def factoryMethod(self, request):
@@ -61,11 +70,9 @@ class UserCreator(ABC):
     def addUser(self, request, title):
         
         if request.method == "POST":
-            user = self.factoryMethod(request)
-            if user != None:
-                user.save()
-                return ShortcutsFacade.callRedirect("detail_client")
-            form = ClientUserForm(request.POST)
+            form = self.factoryMethod(request)
+            if form is None:
+                return ShortcutsFacade.callRedirect("login")
         else:
             form = self.getForm()
         data = {'title':title, "form":form}
@@ -85,7 +92,9 @@ class ClientCreator(UserCreator):
     def factoryMethod(self, request ):
         form = ClientUserForm(request.POST)
         if form.is_valid():
-            return form.save(commit = False)
+            form.save()
+            return
+        return form
 
     def getForm(self):
         return ClientUserForm()
@@ -98,7 +107,9 @@ class PartnerCreator(UserCreator):
     def factoryMethod(self, request ):
         form = PartnerUserForm(request.POST)
         if form.is_valid():
-            return form.save(commit = False)
+            form.save()
+            return
+        return form
 
     def getForm(self):
         return PartnerUserForm()

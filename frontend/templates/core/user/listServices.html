@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Services {% endblock %}
+
+{% block content %}
+<main>
+    {% block schuduleLink %}
+    {% endblock %}
+    <nav class="mb-2">
+        <div class="nav nav-tabs">
+            <button class="nav-link" id="all_btn">All</button>
+            <button class="nav-link active" id="not_done_btn">Not done</button>
+            <button class="nav-link" id="done_btn">Done</button>
+        </div>
+    </nav>
+    
+    {% for service in services %}
+        {% if service.deliveryDate > today %}
+        <div class="card mb-2 event not_done" id="event_{{ service.event.id }}_">
+        {% else %}
+        <div class="card mb-2 event done" id="event_{{ service.event.id }}_" hidden>
+        {% endif %}
+            <div class="card-header"> {{ service.orderPlacementDate }} - {{ service.event.address }}, {{ service.deliveryDate}} - {{ service.address }} </div>
+            <div class="card-body">
+                <div class="card-title">
+                    {% if service.orderPlacementDate > today %}
+                        <span class="badge bg-primary">Not started</span>
+                    {% elif service.deliveryDate > today %}
+                        <span class="badge bg-success">Current</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Done</span>
+                    {% endif %}
+                    <h5 class="mt-2">{{ service.quantity }} {{ service.itemDescription }}</h5>
+                </div>
+                <p>Status: {{ service.productStatus }}</p>
+                <a href="{% url 'detailService' service.id %}" id="detail-btn" class="btn btn-outline-primary">Detail</a>
+                {% block buttons %}{% endblock %}
+            </div>
+        </div>
+    {% endfor %}
+    {% block addButton %}{% endblock %}
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/schedule-control.js' %}"></script>
+{% endblock %}
