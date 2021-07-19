@@ -55,23 +55,23 @@
     </div> <br>
 
     <div class="card">
-        <h5 class="card-header">Impost</h5>
+        <h5 class="card-header">Fixed Tax</h5>
         <div class="card-body">
-            <p class="card-text">{{ service.impost }}</p>
+            <p class="card-text">{{ service.fixedTax }}</p>
         </div>
     </div> <br>
 
     <div class="card">
-        <h5 class="card-header">Dynamic Rate</h5>
+        <h5 class="card-header">Dynamic Tax</h5>
         <div class="card-body">
-            <p class="card-text">{{ service.dynamicRate }}</p>
+            <p class="card-text">{{ service.dynamicTax|floatformat:2 }}</p>
         </div>
     </div> <br>
 
     <div class="card">
-        <h5 class="card-header">Amount</h5>
+        <h5 class="card-header">Total Value</h5>
         <div class="card-body">
-            <p class="card-text">{{ service.amount }}</p>
+            <p class="card-text">{{ service.totalValue|floatformat:2 }}</p>
         </div>
     </div> <br>
 
