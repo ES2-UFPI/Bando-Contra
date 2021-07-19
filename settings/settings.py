@@ -127,6 +127,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 STATIC_URL = config('STATIC_URL', default='/static/')
 MEDIA_URL = config('MEDIA_URL', default='/media/')
 LOGOUT_REDIRECT_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = 'home'
 
 # Directories to save media and compiled static files
 MEDIA_ROOT = BASE_DIR/'_public'/'media'
